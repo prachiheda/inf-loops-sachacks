@@ -1,17 +1,52 @@
-research_task:
+---
+analyze_business_idea_task:
+  description: Analyze the startup concept provided in {business_idea} along with
+    the background provided in {entrepreneur_background}. Identify key strengths,
+    potential weaknesses, opportunities for scalability, and inherent risks associated
+    with the startup idea.
+  expected_output: A detailed analysis report highlighting the strengths, weaknesses,
+    scalability prospects, and risks linked to {business_idea} with context from {entrepreneur_background}.
+  async_execution: false
+  agent: business_analyst
+conduct_market_research_task:
+  description: Perform market research based on {business_idea} to infer competitive
+    landscape. Identify competitors, analyze industry trends, and pinpoint market
+    gaps that could affect the startup's potential.
+  expected_output: A comprehensive market research report that presents identified
+    competitors, key industry trends, and market gaps relevant to {business_idea}.
+  async_execution: false
+  agent: market_researcher
+generate_financial_projections_task:
+  description: Develop high-level financial projections using inputs from {business_idea}
+    and {entrepreneur_background}. Incorporate insights from the market research (from
+    conduct_market_research_task) to estimate revenue potential, projected expenses,
+    and break-even points.
+  expected_output: A financial forecast report that includes revenue estimates, expense
+    projections, and break-even analysis, integrating market trends and competitor
+    data from the earlier market research.
+  async_execution: false
+  agent: financial_forecaster
+  context:
+  - conduct_market_research_task
+validate_and_compile_startup_viability_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
-  expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    Combine the outputs from analyze_business_idea_task, conduct_market_research_task, 
+    and generate_financial_projections_task to create a comprehensive Startup Validation Report. This 
+    report should include an viability score out of 100, determined using a weighted system where Market
+    Demand (30%) evaluates market size, growth rate, and consumer interest, Competitive Landscape (25%)
+    assesses the number of competitors and differentiation, Financial Viability (25%) examines revenue 
+    potential and sustainability, Scalability (10%) considers growth potential and automation 
+    feasibility, and Risk Factors (10%) identifies legal, technical, and operational risks. Provide a short explanation for each factor.
+    Additionally, identify the Top 5 Similar Companies, providing each company's name, similarity
+    score, key features (unique selling points, challenges, strengths), and how they compare to 
+    the given business idea. The final report should also include the strengths and weaknesses of the given business idea. Lastly, provide actionable recommendations based 
+    on the aggregated insights from {business_idea} and {entrepreneur_background}, offering strategic
+    guidance to improve feasibility and market positioning.
+  expected_output: "A dictionary containing {'report': comprehensive validation report, 'viability_score': float between 0-100} with full analysis and recommendations"
+  async_execution: false
+  agent: ai_validator
+  context:
+    - analyze_business_idea_task
+    - conduct_market_research_task
+    - generate_financial_projections_task
 
-reporting_task:
-  description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
-  expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst

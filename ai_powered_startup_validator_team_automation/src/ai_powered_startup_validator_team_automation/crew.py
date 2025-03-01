@@ -1,62 +1,79 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
-
-# If you want to run a snippet of code before or after the crew starts, 
-# you can use the @before_kickoff and @after_kickoff decorators
-# https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
+from crewai_tools import WebsiteSearchTool
+from crewai_tools import PDFSearchTool
+from crewai_tools import ScrapeWebsiteTool
 
 @CrewBase
-class AiPoweredStartupValidatorTeamAutomation():
-	"""AiPoweredStartupValidatorTeamAutomation crew"""
+class AiPoweredStartupValidatorTeamAutomationCrew():
+    """AiPoweredStartupValidatorTeamAutomation crew"""
 
-	# Learn more about YAML configuration files here:
-	# Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-	# Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
-	agents_config = 'config/agents.yaml'
-	tasks_config = 'config/tasks.yaml'
+    @agent
+    def business_analyst(self) -> Agent:
+        return Agent(
+            config=self.agents_config['business_analyst'],
+            tools=[WebsiteSearchTool(), PDFSearchTool()],
+        )
 
-	# If you would like to add tools to your agents, you can learn more about it here:
-	# https://docs.crewai.com/concepts/agents#agent-tools
-	@agent
-	def researcher(self) -> Agent:
-		return Agent(
-			config=self.agents_config['researcher'],
-			verbose=True
-		)
+    @agent
+    def market_researcher(self) -> Agent:
+        return Agent(
+            config=self.agents_config['market_researcher'],
+            tools=[ScrapeWebsiteTool(), WebsiteSearchTool()],
+        )
 
-	@agent
-	def reporting_analyst(self) -> Agent:
-		return Agent(
-			config=self.agents_config['reporting_analyst'],
-			verbose=True
-		)
+    @agent
+    def financial_forecaster(self) -> Agent:
+        return Agent(
+            config=self.agents_config['financial_forecaster'],
+            tools=[],
+        )
 
-	# To learn more about structured task outputs, 
-	# task dependencies, and task callbacks, check out the documentation:
-	# https://docs.crewai.com/concepts/tasks#overview-of-a-task
-	@task
-	def research_task(self) -> Task:
-		return Task(
-			config=self.tasks_config['research_task'],
-		)
+    @agent
+    def ai_validator(self) -> Agent:
+        return Agent(
+            config=self.agents_config['ai_validator'],
+            tools=[],
+        )
 
-	@task
-	def reporting_task(self) -> Task:
-		return Task(
-			config=self.tasks_config['reporting_task'],
-			output_file='report.md'
-		)
 
-	@crew
-	def crew(self) -> Crew:
-		"""Creates the AiPoweredStartupValidatorTeamAutomation crew"""
-		# To learn how to add knowledge sources to your crew, check out the documentation:
-		# https://docs.crewai.com/concepts/knowledge#what-is-knowledge
+    @task
+    def analyze_business_idea_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['analyze_business_idea_task'],
+            tools=[],
+        )
 
-		return Crew(
-			agents=self.agents, # Automatically created by the @agent decorator
-			tasks=self.tasks, # Automatically created by the @task decorator
-			process=Process.sequential,
-			verbose=True,
-			# process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
-		)
+    @task
+    def conduct_market_research_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['conduct_market_research_task'],
+            tools=[],
+        )
+
+    @task
+    def generate_financial_projections_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['generate_financial_projections_task'],
+            tools=[],
+        )
+
+    @task
+    def validate_and_compile_startup_viability_task(self) -> Task:
+        """
+        Validates and compiles startup viability, returning both the report and score.
+        """
+        return Task(
+            config=self.tasks_config['validate_and_compile_startup_viability_task'],
+            tools=[],
+        )
+
+    @crew
+    def crew(self) -> Crew:
+        """Creates the AiPoweredStartupValidatorTeamAutomation crew"""
+        return Crew(
+            agents=self.agents, # Automatically created by the @agent decorator
+            tasks=self.tasks, # Automatically created by the @task decorator
+            process=Process.sequential,
+            verbose=True,
+        )
