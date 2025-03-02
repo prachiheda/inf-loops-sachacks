@@ -1,16 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import TextInput from "@/components/TextInput";
-
+import { Layout } from './components/Layout'
+import { Home } from './pages/Home'
 
 function App() {
-  const [count, setCount] = useState(0)
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <TextInput/>
-    </div>
+    <Layout>
+      <div className="flex min-h-screen flex-col antialiased font-sans">
+        <Home />
+      </div>
+    </Layout>
+
   );
 }
 
