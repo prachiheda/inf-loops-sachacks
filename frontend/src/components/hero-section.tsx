@@ -11,7 +11,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-[100svh] w-full flex items-center justify-center py-12 md:py-16 lg:py-20 bg-gradient-to-b from-background to-background/80">
       <div className="container relative w-full max-w-[1800px]">
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 xl:gap-20">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 xl:gap-16">
           <div className="flex flex-col justify-center space-y-6 py-8 lg:py-12">
             <div className="inline-block rounded-lg bg-muted px-4 py-1.5 text-base w-fit mb-6">
               <span className="font-medium">Introducing InnovaAI</span>

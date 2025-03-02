@@ -787,12 +787,38 @@ export function RoboAssistant() {
 
                                 <div className="space-y-4">
                                   {Object.entries(validationResult.startup_validation_report.viability_score?.breakdown || {}).map(([key, value]) => (
-                                    <div key={key} className="space-y-2">
-                                      <h4 className="font-medium capitalize">{key.replace('_', ' ')}</h4>
-                                      <div className="flex items-center">
-                                        <span className="text-primary font-medium">{value.score}/100</span>
+                                    <div key={key} className="flex justify-between items-start gap-4">
+                                      <div className="flex-1 space-y-2">
+                                        <h4 className="font-medium capitalize">{key.replace('_', ' ')}</h4>
+                                        <p className="text-muted-foreground">{value.explanation}</p>
                                       </div>
-                                      <p className="text-muted-foreground">{value.explanation}</p>
+                                      <div className="relative w-16 h-16 flex-shrink-0">
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                          <svg className="w-full h-full -rotate-90">
+                                            <circle
+                                              cx="32"
+                                              cy="32"
+                                              r="28"
+                                              strokeWidth="8"
+                                              stroke="currentColor"
+                                              fill="transparent"
+                                              className="text-primary/10"
+                                            />
+                                            <circle
+                                              cx="32"
+                                              cy="32"
+                                              r="28"
+                                              strokeWidth="8"
+                                              stroke="currentColor"
+                                              fill="transparent"
+                                              strokeDasharray={2 * Math.PI * 28}
+                                              strokeDashoffset={2 * Math.PI * 28 * (1 - value.score / 100)}
+                                              className="text-primary transition-all duration-500"
+                                            />
+                                          </svg>
+                                          <span className="absolute text-sm font-medium">{value.score}</span>
+                                        </div>
+                                      </div>
                                     </div>
                                   ))}
                                 </div>
@@ -804,98 +830,176 @@ export function RoboAssistant() {
                         <TabsContent value="market" className="mt-4 space-y-4 px-6">
                           {validationResult?.startup_validation_report && (
                             <>
-                              <div className="space-y-4">
+                              <div className="space-y-6">
                                 <div>
-                                  <h3 className="text-lg font-medium">Market Analysis</h3>
-                                  <div className="mt-4 space-y-6">
-                                    <div className="grid gap-4">
-                                      <div>
-                                        <h4 className="font-medium text-muted-foreground text-primary">Industry Overview</h4>
-                                        <ul className="mt-2 space-y-2">
-                                          <li><strong className="">Industry Size:</strong> {validationResult.startup_validation_report.market_analysis.industry_size}</li>
-                                          <li><strong>Growth Trends:</strong> {validationResult.startup_validation_report.market_analysis.growth_trends}</li>
-                                          <li><strong>Market Saturation:</strong> {validationResult.startup_validation_report.market_analysis.market_saturation_level}</li>
-                                        </ul>
-                                      </div>
+                                  <h3 className="text-lg font-medium mb-4">Market Analysis</h3>
+                                  <div className="grid md:grid-cols-2 gap-6">
+                                    {/* Industry Overview Card */}
+                                    <Card className="p-4">
+                                      <h4 className="font-medium text-primary mb-3">Industry Overview</h4>
+                                      <div className="space-y-4">
+                                        {/* Market Size Visualization */}
+                                        <div>
+                                          <div className="flex justify-between mb-2">
+                                            <span className="text-sm text-muted-foreground">Industry Size</span>
+                                            <span className="text-sm font-medium">{validationResult.startup_validation_report.market_analysis.industry_size}</span>
+                                          </div>
+                                          <div className="h-24 w-full bg-secondary/5 rounded-lg relative overflow-hidden">
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                              <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center">
+                                                <div className="w-16 h-16 bg-primary/30 rounded-full flex items-center justify-center">
+                                                  <div className="w-8 h-8 bg-primary rounded-full" />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
 
-                                      <div>
-                                        <h4 className="font-medium text-muted-foreground text-primary">Customer Analysis</h4>
-                                        <ul className="mt-2 space-y-2">
-                                          <li><strong>Target Customers:</strong> {validationResult.startup_validation_report.market_analysis.target_customers}</li>
-                                          <li><strong>Pain Points:</strong> {validationResult.startup_validation_report.market_analysis.customer_pain_points}</li>
-                                        </ul>
-                                      </div>
+                                        {/* Growth Trends - No Visualization */}
+                                        <div className="bg-secondary/5 rounded-lg p-3">
+                                          <span className="text-sm text-muted-foreground">Growth Trends</span>
+                                          <p className="text-sm mt-1">{validationResult.startup_validation_report.market_analysis.growth_trends}</p>
+                                        </div>
 
-                                      <div>
-                                        <h4 className="font-medium text-muted-foreground text-primary">Market Dynamics</h4>
-                                        <ul className="mt-2 space-y-2">
-                                          <li><strong>Key Market Shifts:</strong> {validationResult.startup_validation_report.market_analysis.key_market_shifts}</li>
-                                          <li><strong>Distribution Channels:</strong> {validationResult.startup_validation_report.market_analysis.distribution_channels}</li>
-                                          <li><strong>Regulatory Environment:</strong> {validationResult.startup_validation_report.market_analysis.regulatory_environment}</li>
-                                        </ul>
+                                        {/* Market Saturation - No Visualization */}
+                                        <div className="bg-secondary/5 rounded-lg p-3">
+                                          <span className="text-sm text-muted-foreground">Market Saturation</span>
+                                          <p className="text-sm mt-1">{validationResult.startup_validation_report.market_analysis.market_saturation_level}</p>
+                                        </div>
                                       </div>
+                                    </Card>
 
-                                      <div>
-                                        <h4 className="font-medium text-muted-foreground text-primary">Future Outlook</h4>
-                                        <ul className="mt-2 space-y-2">
-                                          <li><strong>Emerging Opportunities:</strong> {validationResult.startup_validation_report.market_analysis.emerging_opportunities}</li>
-                                        </ul>
+                                    {/* Customer Analysis Card */}
+                                    <Card className="p-4">
+                                      <h4 className="font-medium text-primary mb-3">Customer Analysis</h4>
+                                      <div className="space-y-4">
+                                        <div className="bg-secondary/5 rounded-lg p-3">
+                                          <span className="text-sm text-muted-foreground">Target Customers</span>
+                                          <p className="text-sm mt-1">{validationResult.startup_validation_report.market_analysis.target_customers}</p>
+                                        </div>
+                                        <div className="bg-secondary/5 rounded-lg p-3">
+                                          <span className="text-sm text-muted-foreground">Pain Points</span>
+                                          <p className="text-sm mt-1">{validationResult.startup_validation_report.market_analysis.customer_pain_points}</p>
+                                        </div>
+                                      </div>
+                                    </Card>
+                                  </div>
+
+                                  {/* Market Dynamics Card */}
+                                  <Card className="mt-6 p-4">
+                                    <h4 className="font-medium text-primary mb-3">Market Dynamics</h4>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                      <div className="space-y-3">
+                                        <div className="bg-secondary/5 rounded-lg p-3">
+                                          <span className="text-sm text-muted-foreground">Key Market Shifts</span>
+                                          <p className="text-sm mt-1">{validationResult.startup_validation_report.market_analysis.key_market_shifts}</p>
+                                        </div>
+                                        <div className="bg-secondary/5 rounded-lg p-3">
+                                          <span className="text-sm text-muted-foreground">Distribution Channels</span>
+                                          <p className="text-sm mt-1">{validationResult.startup_validation_report.market_analysis.distribution_channels}</p>
+                                        </div>
+                                      </div>
+                                      <div className="space-y-3">
+                                        <div className="bg-secondary/5 rounded-lg p-3">
+                                          <span className="text-sm text-muted-foreground">Regulatory Environment</span>
+                                          <p className="text-sm mt-1">{validationResult.startup_validation_report.market_analysis.regulatory_environment}</p>
+                                        </div>
+                                        <div className="bg-secondary/5 rounded-lg p-3">
+                                          <span className="text-sm text-muted-foreground">Emerging Opportunities</span>
+                                          <p className="text-sm mt-1">{validationResult.startup_validation_report.market_analysis.emerging_opportunities}</p>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  </Card>
                                 </div>
                               </div>
                             </>
                           )}
                         </TabsContent>
 
-                        <TabsContent value="competition" className="mt-4 space-y-4 px-6">
+                        <TabsContent value="competition" className="mt-4 space-y-4 px-4">
                           {validationResult?.startup_validation_report && (
                             <>
                               <div>
-                              <h3 className="text-lg font-medium">Similar Companies Analysis</h3>
-                                <div className="mt-4 space-y-6">
+                                <h3 className="text-lg font-medium mb-2">Competitive Landscape</h3>
+                                <div className="grid gap-1 pl-2">
                                   {validationResult.startup_validation_report.similar_companies.map((company, index) => (
-                                    <div key={index} className="border p-6 rounded-lg bg-card">
-                                      <div className="flex justify-between items-start">
-                                        <h5 className="text-xl font-semibold">{company.company_name}</h5>
-                                        <div className="bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
-                                          {company.similarity_score}% Similar
+                                    <Card key={index} className="overflow-hidden">
+                                      <CardHeader className="bg-primary/5 py-2">
+                                        <div className="flex justify-between items-center">
+                                          <div>
+                                            <CardTitle className="text-lg">{company.company_name}</CardTitle>
+                                            <CardDescription>Market Competitor</CardDescription>
+                                          </div>
+                                          <div className="px-3 py-1 rounded-full text-sm bg-primary/10">
+                                            {company.similarity_score}% Similar
+                                          </div>
                                         </div>
-                                      </div>
-                                      
-                                      <div className="mt-4 grid gap-4">
-                                        <div>
-                                          <h6 className="font-medium text-muted-foreground">Unique Selling Points</h6>
-                                          <p className="mt-1">{company.key_features.unique_selling_points}</p>
+                                      </CardHeader>
+                                      <CardContent className="p-3">
+                                        <div className="grid md:grid-cols-2 gap-3">
+                                          <div className="space-y-2">
+                                            <div>
+                                              <h4 className="font-medium mb-1 text-primary px-2">Unique Selling Points</h4>
+                                              <div className="rounded-lg p-2.5 bg-secondary/5">
+                                                <p className="text-sm px-4">{company.key_features.unique_selling_points}</p>
+                                              </div>
+                                            </div>
+                                            <div>
+                                              <h4 className="font-medium mb-1 text-primary px-2">Strengths</h4>
+                                              <div className="rounded-lg p-2.5 bg-secondary/5">
+                                                <p className="text-sm px-4">{company.key_features.strengths}</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div className="space-y-2">
+                                            <div>
+                                              <h4 className="font-medium mb-1 text-primary px-2">Challenges</h4>
+                                              <div className="rounded-lg p-2.5 bg-secondary/5">
+                                                <p className="text-sm px-4">{company.key_features.challenges}</p>
+                                              </div>
+                                            </div>
+                                            <div>
+                                              <h4 className="font-medium mb-1 text-primary px-2">Your Competitive Edge</h4>
+                                              <div className="rounded-lg p-2.5 bg-secondary/5">
+                                                <p className="text-sm px-4">{company.comparison_to_business_idea}</p>
+                                              </div>
+                                            </div>
+                                          </div>
                                         </div>
-                                        
-                                        <div>
-                                          <h6 className="font-medium text-muted-foreground">Strengths</h6>
-                                          <p className="mt-1">{company.key_features.strengths}</p>
-                                        </div>
-                                        
-                                        <div>
-                                          <h6 className="font-medium text-muted-foreground">Challenges</h6>
-                                          <p className="mt-1">{company.key_features.challenges}</p>
-                                        </div>
-                                        
-                                        <div>
-                                          <h6 className="font-medium text-muted-foreground">Comparison to Your Idea</h6>
-                                          <p className="mt-1">{company.comparison_to_business_idea}</p>
-                                        </div>
-                                      </div>
-                                    </div>
+                                      </CardContent>
+                                    </Card>
                                   ))}
                                 </div>
                               </div>
 
-                              <div className="mt-8">
-                                <h4 className="font-medium">Competitive Landscape Summary</h4>
-                                <div className="mt-2">
-                                  <p>{validationResult.startup_validation_report.viability_score.breakdown.competitive_landscape.explanation}</p>
-                                </div>
-                              </div>
+                              <Card className="mt-1">
+                                <CardHeader className="py-1 border-b">
+                                  <CardTitle className="text-base">Competitive Analysis Summary</CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-2">
+                                  <div className="rounded-lg p-2 bg-secondary/5">
+                                    <h4 className="font-medium mb-0.5">Market Position</h4>
+                                    <p className="text-sm">
+                                      {validationResult.startup_validation_report.viability_score.breakdown.competitive_landscape.explanation}
+                                    </p>
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-2 mt-2">
+                                    <div className="rounded-lg p-2 bg-secondary/5">
+                                      <h5 className="font-medium mb-0.5">Differentiation</h5>
+                                      <p className="text-sm">
+                                        {validationResult.startup_validation_report.viability_score.breakdown.competitive_landscape.factors.differentiation_level}
+                                      </p>
+                                    </div>
+                                    <div className="rounded-lg p-2 bg-secondary/5">
+                                      <h5 className="font-medium mb-0.5">Entry Barriers</h5>
+                                      <p className="text-sm">
+                                        {validationResult.startup_validation_report.viability_score.breakdown.competitive_landscape.factors.barriers_to_entry}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </CardContent>
+                              </Card>
                             </>
                           )}
                         </TabsContent>
@@ -1152,24 +1256,6 @@ export function RoboAssistant() {
                                 <div>
                                   <h4 className="font-semibold text-lg">{investor.name}</h4>
                                   <p className="text-sm text-muted-foreground">{investor.company}</p>
-                                </div>
-                                <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                                  Match Score: {Math.round(Math.random() * 30 + 70)}%
-                                </div>
-                              </div>
-                              
-                              <p className="text-sm">{investor.profile}</p>
-                              
-                              <div className="space-y-2">
-                                <div>
-                                  <p className="text-sm font-medium text-muted-foreground">Investment Focus</p>
-                                  <div className="flex flex-wrap gap-1 mt-1">
-                                    {investor.focus.map((focus, i) => (
-                                      <span key={i} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-                                        {focus}
-                                      </span>
-                                    ))}
-                                  </div>
                                 </div>
                                 
                                 {investor.investmentStage && (
