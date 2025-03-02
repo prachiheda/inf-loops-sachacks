@@ -12,8 +12,6 @@ export function Home() {
         <HeroSection />
         <Features />
         <RoboAssistant />
-        <Testimonials />
-        <PricingSection />
       </main>
       <Footer />
     </div>

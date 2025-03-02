@@ -31,19 +31,18 @@ export function Testimonials() {
   ]
 
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/30">
-      <div className="container px-4 md:px-6">
+    <section className="w-full py-12 md:py-16 lg:py-20 bg-muted/30">
+      <div className="container relative w-full max-w-[1800px]">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Testimonials</div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Trusted by Successful Entrepreneurs</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <div className="inline-block rounded-lg bg-primary/10 px-4 py-1.5 text-base text-primary">Testimonials</div>
+            <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl">Trusted by Successful Entrepreneurs</h2>
+            <p className="max-w-[900px] text-xl text-muted-foreground md:text-2xl">
               See how ValidateAI has helped founders turn their ideas into successful businesses.
             </p>
           </div>
         </div>
-
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 mt-12">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 mt-16">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
