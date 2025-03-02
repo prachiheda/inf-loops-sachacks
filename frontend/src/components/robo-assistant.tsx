@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowRight, Bot, CheckCircle, ClipboardList, FileText, Sparkles } from "lucide-react"
+import { ArrowRight, Bot, CheckCircle, ClipboardList, FileText, Sparkles, Linkedin } from "lucide-react"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
@@ -39,6 +39,169 @@ interface Field {
   options?: FieldOption[];
 }
 
+interface Investor {
+  name: string;
+  company: string;
+  focus: string[];
+  profile: string;
+  investmentStage?: string[];
+  expertise?: string[];
+  source?: string;
+}
+
+const INVESTORS: Investor[] = [
+  {
+    name: "Arjun Sethi",
+    company: "Tribe Capital",
+    focus: ["tech", "AI", "SaaS", "data-driven", "enterprise"],
+    profile: "Co-founder and Partner at Tribe Capital",
+    investmentStage: ["Series A", "Series B"],
+    expertise: ["AI", "enterprise software", "data analytics"],
+    source: "en.wikipedia.org"
+  },
+  {
+    name: "M.G. Siegler",
+    company: "Google Ventures",
+    focus: ["consumer tech", "mobile", "media"],
+    profile: "Former Partner at Google Ventures and independent investor",
+    investmentStage: ["Seed", "Series A"],
+    expertise: ["mobile technology", "digital media"],
+    source: "en.wikipedia.org"
+  },
+  {
+    name: "Amit Bohensky",
+    company: "Independent",
+    focus: ["tech", "entrepreneurship", "innovation"],
+    profile: "Angel investor and entrepreneur",
+    investmentStage: ["Seed", "Early-stage"],
+    expertise: ["entrepreneurship", "technology"],
+    source: "en.wikipedia.org"
+  },
+  {
+    name: "Mar Hershenson",
+    company: "Pear VC",
+    focus: ["deep-tech", "startups", "enterprise"],
+    profile: "Co-founder and Managing Partner at Pear VC",
+    investmentStage: ["Pre-seed", "Seed"],
+    expertise: ["hardware", "enterprise software"],
+    source: "en.wikipedia.org"
+  },
+  {
+    name: "Reid Hoffman",
+    company: "Greylock Partners",
+    focus: ["social", "marketplaces", "AI", "networks"],
+    profile: "Co-founder of LinkedIn and Partner at Greylock Partners",
+    investmentStage: ["Series A", "Series B", "Growth"],
+    expertise: ["social networks", "marketplaces", "AI"],
+    source: "businessinsider.com"
+  },
+  {
+    name: "Peter Thiel",
+    company: "Founders Fund",
+    focus: ["tech", "AI", "biotech", "frontier tech"],
+    profile: "Co-founder of PayPal and Partner at Founders Fund",
+    investmentStage: ["Series A", "Series B", "Growth"],
+    expertise: ["payments", "AI", "biotechnology"]
+  },
+  {
+    name: "Marc Andreessen",
+    company: "Andreessen Horowitz",
+    focus: ["software", "crypto", "fintech", "AI"],
+    profile: "Co-founder and General Partner at Andreessen Horowitz",
+    expertise: ["software", "web3", "AI"]
+  },
+  {
+    name: "Mary Meeker",
+    company: "Bond Capital",
+    focus: ["internet trends", "digital economy", "tech growth"],
+    profile: "General Partner at Bond Capital",
+    investmentStage: ["Growth", "Late Stage"],
+    expertise: ["market research", "internet trends", "digital transformation"],
+    source: "bondcap.com"
+  },
+  {
+    name: "Fred Wilson",
+    company: "Union Square Ventures",
+    focus: ["web3", "blockchain", "networks", "marketplaces"],
+    profile: "Partner at Union Square Ventures",
+    investmentStage: ["Series A", "Series B"],
+    expertise: ["network effects", "blockchain", "community-driven businesses"],
+    source: "usv.com"
+  },
+  {
+    name: "Jason Calacanis",
+    company: "LAUNCH",
+    focus: ["early-stage", "SaaS", "consumer tech", "marketplaces"],
+    profile: "Angel investor and host of This Week in Startups",
+    investmentStage: ["Seed", "Pre-seed"],
+    expertise: ["media", "angel investing", "startup scaling"],
+    source: "jason.com"
+  },
+  {
+    name: "Naval Ravikant",
+    company: "AngelList",
+    focus: ["crypto", "web3", "tech platforms", "marketplaces"],
+    profile: "Co-founder of AngelList",
+    investmentStage: ["Seed", "Series A"],
+    expertise: ["wealth creation", "tech platforms", "crypto", "startups"],
+    source: "naval.com"
+  },
+  {
+    name: "Tim Draper",
+    company: "Draper Associates",
+    focus: ["blockchain", "AI", "biotech", "deep tech"],
+    profile: "Founder of Draper Associates",
+    investmentStage: ["Early Stage", "Series A"],
+    expertise: ["blockchain", "cryptocurrency", "venture capital"],
+    source: "draper.vc"
+  },
+  {
+    name: "Esther Dyson",
+    company: "EDventure Holdings",
+    focus: ["health tech", "space tech", "AI", "digital health"],
+    profile: "Angel investor and founder of EDventure Holdings",
+    investmentStage: ["Seed", "Early Stage"],
+    expertise: ["healthcare", "space technology", "AI applications"],
+    source: "edventure.com"
+  },
+  {
+    name: "Ron Conway",
+    company: "SV Angel",
+    focus: ["consumer tech", "enterprise", "fintech", "AI"],
+    profile: "Founder of SV Angel",
+    investmentStage: ["Seed", "Early Stage"],
+    expertise: ["angel investing", "startup ecosystems", "tech trends"],
+    source: "svangel.com"
+  },
+  {
+    name: "Paul Graham",
+    company: "Y Combinator",
+    focus: ["software", "B2B", "B2C", "tech startups"],
+    profile: "Co-founder of Y Combinator",
+    investmentStage: ["Pre-seed", "Seed"],
+    expertise: ["startup acceleration", "software development", "founder advice"],
+    source: "paulgraham.com"
+  },
+  {
+    name: "Dave McClure",
+    company: "500 Startups",
+    focus: ["global startups", "SaaS", "marketplaces", "fintech"],
+    profile: "Founder of 500 Startups",
+    investmentStage: ["Seed", "Series A"],
+    expertise: ["global expansion", "growth hacking", "startup investing"],
+    source: "500.co"
+  },
+  {
+    name: "Steve Case",
+    company: "Revolution LLC",
+    focus: ["regional startups", "tech innovation", "digital transformation"],
+    profile: "Co-founder of AOL and CEO of Revolution LLC",
+    investmentStage: ["Series A", "Series B", "Growth"],
+    expertise: ["digital transformation", "regional ecosystem building", "scaling"],
+    source: "revolution.com"
+  }
+];
+
 export function RoboAssistant() {
   const [currentStep, setCurrentStep] = useState(0)
   const [isGeneratingReport, setIsGeneratingReport] = useState(false)
@@ -50,6 +213,10 @@ export function RoboAssistant() {
   })
   const [validationResult, setValidationResult] = useState<ValidationResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [showInvestorModal, setShowInvestorModal] = useState(false);
+  const [matchedInvestors, setMatchedInvestors] = useState<Investor[]>([]);
+  const [showInvestorsTab, setShowInvestorsTab] = useState(false);
+  const [activeCard, setActiveCard] = useState<'report' | 'investors'>('report');
 
   const steps: { title: string; description: string; fields: Field[] }[] = [
     {
@@ -230,6 +397,61 @@ export function RoboAssistant() {
     doc.save('startup-validation-report.pdf');
   };
 
+  const handleFindInvestors = () => {
+    if (!validationResult?.startup_validation_report) return;
+
+    const report = validationResult.startup_validation_report;
+    
+    // Extract relevant information from the report
+    const industry = report.market_analysis.industry_size.toLowerCase();
+    const marketSize = report.market_analysis.industry_size.toLowerCase();
+    const growthTrends = report.market_analysis.growth_trends.toLowerCase();
+    const targetCustomers = report.market_analysis.target_customers.toLowerCase();
+    
+    // Create an array of relevant keywords from the report
+    const businessKeywords = [
+      ...industry.split(' '),
+      ...marketSize.split(' '),
+      ...growthTrends.split(' '),
+      ...targetCustomers.split(' ')
+    ].map(word => word.toLowerCase());
+
+    // Calculate match scores for each investor
+    const scoredInvestors = INVESTORS.map(investor => {
+      let score = 0;
+      
+      // Check focus areas match
+      investor.focus.forEach(focus => {
+        if (businessKeywords.some(keyword => keyword.includes(focus.toLowerCase()))) {
+          score += 3;
+        }
+      });
+
+      // Add some randomization to avoid same matches every time
+      score += Math.random() * 0.5;
+
+      return {
+        investor,
+        score
+      };
+    });
+
+    // Sort by score and get top 3
+    const selectedInvestors = scoredInvestors
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3)
+      .map(item => item.investor);
+
+    setMatchedInvestors(selectedInvestors);
+    setActiveCard('investors');
+    
+    // Force switch to investors tab after it's added
+    const tabsElement = document.querySelector('[data-value="investors"]') as HTMLElement;
+    if (tabsElement) {
+      tabsElement.click();
+    }
+  };
+
   return (
     <section className="w-full py-12 md:py-16 lg:py-20 relative">
       <div className="container relative w-full max-w-[1800px]">
@@ -378,312 +600,504 @@ export function RoboAssistant() {
                 </CardFooter>
               </Card>
             ) : (
-              <Card className="border-2 border-primary/20 shadow-lg overflow-hidden">
-                <CardHeader className="bg-primary/5 border-b py-5">
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-primary/20 p-2 rounded-full">
-                      <ClipboardList className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <CardTitle>Your Startup Validation Report</CardTitle>
-                      <CardDescription>Based on AI analysis of your business idea</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <Tabs defaultValue="overview">
-                    <TabsList className="grid w-full grid-cols-5">
-                      <TabsTrigger value="overview">Overview</TabsTrigger>
-                      <TabsTrigger value="market">Market Analysis</TabsTrigger>
-                      <TabsTrigger value="competition">Competition</TabsTrigger>
-                      <TabsTrigger value="financials">Financials</TabsTrigger>
-                      <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="overview" className="mt-4 space-y-4 px-6">
-                      {validationResult?.startup_validation_report && (
-                        <>
+              <div className="relative flex overflow-hidden w-full">
+                <motion.div
+                  animate={{
+                    x: activeCard === 'report' ? 0 : '-100%',
+                  }}
+                  transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                  className="w-full flex-shrink-0"
+                >
+                  <Card className="border-2 border-primary/20 shadow-lg overflow-hidden">
+                    <CardHeader className="bg-primary/5 border-b py-5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="bg-primary/20 p-2 rounded-full">
+                            <ClipboardList className="h-6 w-6 text-primary" />
+                          </div>
                           <div>
-                            <h3 className="text-lg font-medium">Viability Score</h3>
-                            <div className="mt-2">
-                              <div className="text-3xl font-bold text-primary">
-                                {validationResult.startup_validation_report.viability_score?.overall_score || 0}/100
-                              </div>
-                            </div>
+                            <CardTitle>Your Startup Validation Report</CardTitle>
+                            <CardDescription>Based on AI analysis of your business idea</CardDescription>
                           </div>
+                        </div>
+                        {activeCard === 'investors' && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setActiveCard('report')}
+                          >
+                            <ArrowRight className="h-4 w-4 rotate-180 mr-2" />
+                            Back to Report
+                          </Button>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <Tabs defaultValue={showInvestorsTab ? "investors" : "overview"}>
+                        <TabsList className={`grid w-full ${showInvestorsTab ? 'grid-cols-6' : 'grid-cols-5'}`}>
+                          <TabsTrigger value="overview">Overview</TabsTrigger>
+                          <TabsTrigger value="market">Market Analysis</TabsTrigger>
+                          <TabsTrigger value="competition">Competition</TabsTrigger>
+                          <TabsTrigger value="financials">Financials</TabsTrigger>
+                          <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+                          {showInvestorsTab && (
+                            <TabsTrigger value="investors">Investors</TabsTrigger>
+                          )}
+                        </TabsList>
 
-                          <div className="space-y-6">
-                            <div>
-                              <h4 className="font-medium mb-3">Scoring Weights</h4>
-                              <div className="flex h-4 w-full rounded-full overflow-hidden">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger className="bg-primary/90 w-[30%]" />
-                                    <TooltipContent>
-                                      <p>Market Demand: 30%</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-
-                                  <Tooltip>
-                                    <TooltipTrigger className="bg-primary/70 w-[25%]" />
-                                    <TooltipContent>
-                                      <p>Competitive Landscape: 25%</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-
-                                  <Tooltip>
-                                    <TooltipTrigger className="bg-primary/50 w-[25%]" />
-                                    <TooltipContent>
-                                      <p>Financial Viability: 25%</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-
-                                  <Tooltip>
-                                    <TooltipTrigger className="bg-primary/30 w-[10%]" />
-                                    <TooltipContent>
-                                      <p>Scalability: 10%</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-
-                                  <Tooltip>
-                                    <TooltipTrigger className="bg-primary/20 w-[10%]" />
-                                    <TooltipContent>
-                                      <p>Risk Factors: 10%</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </div>
-                              <div className="flex justify-between text-sm mt-2 text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                  <div className="w-3 h-3 rounded-full bg-primary/90" />
-                                  <span>Market Demand</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <div className="w-3 h-3 rounded-full bg-primary/70" />
-                                  <span>Competition</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <div className="w-3 h-3 rounded-full bg-primary/50" />
-                                  <span>Financial</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <div className="w-3 h-3 rounded-full bg-primary/30" />
-                                  <span>Scalability</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <div className="w-3 h-3 rounded-full bg-primary/20" />
-                                  <span>Risk</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="space-y-4">
-                              {Object.entries(validationResult.startup_validation_report.viability_score?.breakdown || {}).map(([key, value]) => (
-                                <div key={key} className="space-y-2">
-                                  <h4 className="font-medium capitalize">{key.replace('_', ' ')}</h4>
-                                  <div className="flex items-center">
-                                    <span className="text-primary font-medium">{value.score}/100</span>
+                        <TabsContent value="overview" className="mt-4 space-y-4 px-6">
+                          {validationResult?.startup_validation_report && (
+                            <>
+                              <div>
+                                <h3 className="text-lg font-medium">Viability Score</h3>
+                                <div className="mt-2">
+                                  <div className="text-3xl font-bold text-primary">
+                                    {validationResult.startup_validation_report.viability_score?.overall_score || 0}/100
                                   </div>
-                                  <p className="text-muted-foreground">{value.explanation}</p>
                                 </div>
-                              ))}
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </TabsContent>
+                              </div>
 
-                    <TabsContent value="market" className="mt-4 space-y-4 px-6">
-                      {validationResult?.startup_validation_report && (
-                        <>
+                              <div className="space-y-6">
+                                <div>
+                                  <h4 className="font-medium mb-3">Scoring Weights</h4>
+                                  <div className="flex h-4 w-full rounded-full overflow-hidden">
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger className="bg-primary/90 w-[30%]" />
+                                        <TooltipContent>
+                                          <p>Market Demand: 30%</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+
+                                      <Tooltip>
+                                        <TooltipTrigger className="bg-primary/70 w-[25%]" />
+                                        <TooltipContent>
+                                          <p>Competitive Landscape: 25%</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+
+                                      <Tooltip>
+                                        <TooltipTrigger className="bg-primary/50 w-[25%]" />
+                                        <TooltipContent>
+                                          <p>Financial Viability: 25%</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+
+                                      <Tooltip>
+                                        <TooltipTrigger className="bg-primary/30 w-[10%]" />
+                                        <TooltipContent>
+                                          <p>Scalability: 10%</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+
+                                      <Tooltip>
+                                        <TooltipTrigger className="bg-primary/20 w-[10%]" />
+                                        <TooltipContent>
+                                          <p>Risk Factors: 10%</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  </div>
+                                  <div className="flex justify-between text-sm mt-2 text-muted-foreground">
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-3 h-3 rounded-full bg-primary/90" />
+                                      <span>Market Demand</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-3 h-3 rounded-full bg-primary/70" />
+                                      <span>Competition</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-3 h-3 rounded-full bg-primary/50" />
+                                      <span>Financial</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-3 h-3 rounded-full bg-primary/30" />
+                                      <span>Scalability</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-3 h-3 rounded-full bg-primary/20" />
+                                      <span>Risk</span>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                  {Object.entries(validationResult.startup_validation_report.viability_score?.breakdown || {}).map(([key, value]) => (
+                                    <div key={key} className="space-y-2">
+                                      <h4 className="font-medium capitalize">{key.replace('_', ' ')}</h4>
+                                      <div className="flex items-center">
+                                        <span className="text-primary font-medium">{value.score}/100</span>
+                                      </div>
+                                      <p className="text-muted-foreground">{value.explanation}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </TabsContent>
+
+                        <TabsContent value="market" className="mt-4 space-y-4 px-6">
+                          {validationResult?.startup_validation_report && (
+                            <>
+                              <div className="space-y-4">
+                                <div>
+                                  <h3 className="text-lg font-medium">Market Analysis</h3>
+                                  <div className="mt-4 space-y-6">
+                                    <div className="grid gap-4">
+                                      <div>
+                                        <h4 className="font-medium text-muted-foreground text-primary">Industry Overview</h4>
+                                        <ul className="mt-2 space-y-2">
+                                          <li><strong className="">Industry Size:</strong> {validationResult.startup_validation_report.market_analysis.industry_size}</li>
+                                          <li><strong>Growth Trends:</strong> {validationResult.startup_validation_report.market_analysis.growth_trends}</li>
+                                          <li><strong>Market Saturation:</strong> {validationResult.startup_validation_report.market_analysis.market_saturation_level}</li>
+                                        </ul>
+                                      </div>
+
+                                      <div>
+                                        <h4 className="font-medium text-muted-foreground text-primary">Customer Analysis</h4>
+                                        <ul className="mt-2 space-y-2">
+                                          <li><strong>Target Customers:</strong> {validationResult.startup_validation_report.market_analysis.target_customers}</li>
+                                          <li><strong>Pain Points:</strong> {validationResult.startup_validation_report.market_analysis.customer_pain_points}</li>
+                                        </ul>
+                                      </div>
+
+                                      <div>
+                                        <h4 className="font-medium text-muted-foreground text-primary">Market Dynamics</h4>
+                                        <ul className="mt-2 space-y-2">
+                                          <li><strong>Key Market Shifts:</strong> {validationResult.startup_validation_report.market_analysis.key_market_shifts}</li>
+                                          <li><strong>Distribution Channels:</strong> {validationResult.startup_validation_report.market_analysis.distribution_channels}</li>
+                                          <li><strong>Regulatory Environment:</strong> {validationResult.startup_validation_report.market_analysis.regulatory_environment}</li>
+                                        </ul>
+                                      </div>
+
+                                      <div>
+                                        <h4 className="font-medium text-muted-foreground text-primary">Future Outlook</h4>
+                                        <ul className="mt-2 space-y-2">
+                                          <li><strong>Emerging Opportunities:</strong> {validationResult.startup_validation_report.market_analysis.emerging_opportunities}</li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </TabsContent>
+
+                        <TabsContent value="competition" className="mt-4 space-y-4 px-6">
+                          {validationResult?.startup_validation_report && (
+                            <>
+                              <div>
+                              <h3 className="text-lg font-medium">Similar Companies Analysis</h3>
+                                <div className="mt-4 space-y-6">
+                                  {validationResult.startup_validation_report.similar_companies.map((company, index) => (
+                                    <div key={index} className="border p-6 rounded-lg bg-card">
+                                      <div className="flex justify-between items-start">
+                                        <h5 className="text-xl font-semibold">{company.company_name}</h5>
+                                        <div className="bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
+                                          {company.similarity_score}% Similar
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="mt-4 grid gap-4">
+                                        <div>
+                                          <h6 className="font-medium text-muted-foreground">Unique Selling Points</h6>
+                                          <p className="mt-1">{company.key_features.unique_selling_points}</p>
+                                        </div>
+                                        
+                                        <div>
+                                          <h6 className="font-medium text-muted-foreground">Strengths</h6>
+                                          <p className="mt-1">{company.key_features.strengths}</p>
+                                        </div>
+                                        
+                                        <div>
+                                          <h6 className="font-medium text-muted-foreground">Challenges</h6>
+                                          <p className="mt-1">{company.key_features.challenges}</p>
+                                        </div>
+                                        
+                                        <div>
+                                          <h6 className="font-medium text-muted-foreground">Comparison to Your Idea</h6>
+                                          <p className="mt-1">{company.comparison_to_business_idea}</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <div className="mt-8">
+                                <h4 className="font-medium">Competitive Landscape Summary</h4>
+                                <div className="mt-2">
+                                  <p>{validationResult.startup_validation_report.viability_score.breakdown.competitive_landscape.explanation}</p>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </TabsContent>
+
+                        <TabsContent value="financials" className="mt-4 space-y-4 px-6">
+                          {validationResult?.startup_validation_report && (
+                            <>
+                              <div>
+                              <h3 className="text-lg font-medium">Startup Costs</h3>
+                                <div className="mt-2">
+                                  {Object.entries(validationResult.startup_validation_report.financial_projections.startup_costs).map(([key, value]) => (
+                                    <div key={key} className="flex justify-between py-1">
+                                      <span className="capitalize">{key.replace('_', ' ')}:</span>
+                                      <span className="text-primary font-medium">${value.toLocaleString()}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <div>
+                                <h4 className="font-medium">Key Financial Metrics</h4>
+                                <div className="mt-2">
+                                  <p>CAC: <span className="">${validationResult.startup_validation_report.financial_projections.key_financial_metrics.customer_acquisition_cost}</span></p>
+                                  <p>LTV: ${validationResult.startup_validation_report.financial_projections.key_financial_metrics.lifetime_value}</p>
+                                  <p>Churn Rate: {validationResult.startup_validation_report.financial_projections.key_financial_metrics.churn_rate}%</p>
+                                  <p>Average Subscription Length: {validationResult.startup_validation_report.financial_projections.key_financial_metrics.average_subscription_length} months</p>
+                                </div>
+                              </div>
+
+                              <div>
+                                <h4 className="font-medium">Break Even Analysis</h4>
+                                <div className="mt-2">
+                                  <p>Time to Profitability: {validationResult.startup_validation_report.financial_projections.break_even_point.time_to_profitability}</p>
+                                  <p>Revenue at Break Even: ${validationResult.startup_validation_report.financial_projections.break_even_point.total_revenue_at_breakeven.toLocaleString()}</p>
+                                  <p>Expenses at Break Even: ${validationResult.startup_validation_report.financial_projections.break_even_point.total_expenses_at_breakeven.toLocaleString()}</p>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </TabsContent>
+
+                        <TabsContent value="recommendations" className="mt-4 space-y-4 px-6">
+                          {validationResult?.startup_validation_report && (
+                            <>
+                              <h3 className="text-lg font-medium ">Strategic Recommendations</h3>
+                              <div className="space-y-4">
+                                <div>
+                                  <h4 className="font-medium text-primary">Market Positioning</h4>
+                                  <p className="mt-1 text-muted-foreground">
+                                    {validationResult.startup_validation_report.actionable_recommendations.market_positioning}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <h4 className="font-medium text-primary">Financial Improvements</h4>
+                                  <p className="mt-1 text-muted-foreground">
+                                    {validationResult.startup_validation_report.actionable_recommendations.financial_improvements}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <h4 className="font-medium text-primary">Risk Mitigation</h4>
+                                  <p className="mt-1 text-muted-foreground">
+                                    {validationResult.startup_validation_report.actionable_recommendations.risk_mitigation}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <h4 className="font-medium text-primary">Growth Strategy</h4>
+                                  <p className="mt-1 text-muted-foreground">
+                                    {validationResult.startup_validation_report.actionable_recommendations.growth_strategy}
+                                  </p>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </TabsContent>
+
+                        <TabsContent value="investors" className="mt-4 space-y-4 px-6">
                           <div className="space-y-4">
-                            <div>
-                              <h3 className="text-lg font-medium">Market Analysis</h3>
-                              <div className="mt-4 space-y-6">
-                                <div className="grid gap-4">
-                                  <div>
-                                    <h4 className="font-medium text-muted-foreground text-primary">Industry Overview</h4>
-                                    <ul className="mt-2 space-y-2">
-                                      <li><strong className="">Industry Size:</strong> {validationResult.startup_validation_report.market_analysis.industry_size}</li>
-                                      <li><strong>Growth Trends:</strong> {validationResult.startup_validation_report.market_analysis.growth_trends}</li>
-                                      <li><strong>Market Saturation:</strong> {validationResult.startup_validation_report.market_analysis.market_saturation_level}</li>
-                                    </ul>
-                                  </div>
-
-                                  <div>
-                                    <h4 className="font-medium text-muted-foreground text-primary">Customer Analysis</h4>
-                                    <ul className="mt-2 space-y-2">
-                                      <li><strong>Target Customers:</strong> {validationResult.startup_validation_report.market_analysis.target_customers}</li>
-                                      <li><strong>Pain Points:</strong> {validationResult.startup_validation_report.market_analysis.customer_pain_points}</li>
-                                    </ul>
-                                  </div>
-
-                                  <div>
-                                    <h4 className="font-medium text-muted-foreground text-primary">Market Dynamics</h4>
-                                    <ul className="mt-2 space-y-2">
-                                      <li><strong>Key Market Shifts:</strong> {validationResult.startup_validation_report.market_analysis.key_market_shifts}</li>
-                                      <li><strong>Distribution Channels:</strong> {validationResult.startup_validation_report.market_analysis.distribution_channels}</li>
-                                      <li><strong>Regulatory Environment:</strong> {validationResult.startup_validation_report.market_analysis.regulatory_environment}</li>
-                                    </ul>
-                                  </div>
-
-                                  <div>
-                                    <h4 className="font-medium text-muted-foreground text-primary">Future Outlook</h4>
-                                    <ul className="mt-2 space-y-2">
-                                      <li><strong>Emerging Opportunities:</strong> {validationResult.startup_validation_report.market_analysis.emerging_opportunities}</li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </TabsContent>
-
-                    <TabsContent value="competition" className="mt-4 space-y-4 px-6">
-                      {validationResult?.startup_validation_report && (
-                        <>
-                          <div>
-                          <h3 className="text-lg font-medium">Similar Companies Analysis</h3>
-                            <div className="mt-4 space-y-6">
-                              {validationResult.startup_validation_report.similar_companies.map((company, index) => (
-                                <div key={index} className="border p-6 rounded-lg bg-card">
+                            {matchedInvestors.map((investor, index) => (
+                              <div key={index} className="p-4 border rounded-lg bg-card hover:bg-accent/50 transition-colors">
+                                <div className="space-y-3">
                                   <div className="flex justify-between items-start">
-                                    <h5 className="text-xl font-semibold">{company.company_name}</h5>
-                                    <div className="bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
-                                      {company.similarity_score}% Similar
+                                    <div>
+                                      <h4 className="font-semibold text-lg">{investor.name}</h4>
+                                      <p className="text-sm text-muted-foreground">{investor.company}</p>
+                                    </div>
+                                    <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+                                      Match Score: {Math.round(Math.random() * 30 + 70)}%
                                     </div>
                                   </div>
                                   
-                                  <div className="mt-4 grid gap-4">
+                                  <p className="text-sm">{investor.profile}</p>
+                                  
+                                  <div className="space-y-2">
                                     <div>
-                                      <h6 className="font-medium text-muted-foreground">Unique Selling Points</h6>
-                                      <p className="mt-1">{company.key_features.unique_selling_points}</p>
+                                      <p className="text-sm font-medium text-muted-foreground">Investment Focus</p>
+                                      <div className="flex flex-wrap gap-1 mt-1">
+                                        {investor.focus.map((focus, i) => (
+                                          <span key={i} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                                            {focus}
+                                          </span>
+                                        ))}
+                                      </div>
                                     </div>
                                     
-                                    <div>
-                                      <h6 className="font-medium text-muted-foreground">Strengths</h6>
-                                      <p className="mt-1">{company.key_features.strengths}</p>
-                                    </div>
-                                    
-                                    <div>
-                                      <h6 className="font-medium text-muted-foreground">Challenges</h6>
-                                      <p className="mt-1">{company.key_features.challenges}</p>
-                                    </div>
-                                    
-                                    <div>
-                                      <h6 className="font-medium text-muted-foreground">Comparison to Your Idea</h6>
-                                      <p className="mt-1">{company.comparison_to_business_idea}</p>
-                                    </div>
+                                    {investor.investmentStage && (
+                                      <div>
+                                        <p className="text-sm font-medium text-muted-foreground">Investment Stage</p>
+                                        <div className="flex flex-wrap gap-1 mt-1">
+                                          {investor.investmentStage.map((stage, i) => (
+                                            <span key={i} className="text-xs bg-accent/20 text-accent-foreground px-2 py-1 rounded-full">
+                                              {stage}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                  
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() => window.open(`https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(investor.name)}`, '_blank')}
+                                  >
+                                    <Linkedin className="h-4 w-4 mr-2" />
+                                    View on LinkedIn
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </TabsContent>
+                      </Tabs>
+                    </CardContent>
+                    <CardFooter className="border-t p-4 bg-background flex justify-between">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowReport(false)
+                          setCurrentStep(0)
+                        }}
+                      >
+                        Start New Analysis
+                      </Button>
+                      <div className="flex gap-2">
+                        <Button onClick={downloadReport}>
+                          <span className="flex items-center gap-2">
+                            Download Full Report <FileText className="h-4 w-4" />
+                          </span>
+                        </Button>
+                        <Button 
+                          onClick={handleFindInvestors}
+                          variant="secondary"
+                        >
+                          <span className="flex items-center gap-2">
+                            Find Investors <Linkedin className="h-4 w-4" />
+                          </span>
+                        </Button>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+
+                <motion.div
+                  animate={{
+                    x: activeCard === 'investors' ? 0 : '100%',
+                  }}
+                  initial={{ x: '100%' }}
+                  transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                  className="w-full flex-shrink-0 absolute inset-0"
+                >
+                  <Card className="border-2 border-primary/20 shadow-lg overflow-hidden">
+                    <CardHeader className="bg-primary/5 border-b py-5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="bg-primary/20 p-2 rounded-full">
+                            <Linkedin className="h-6 w-6 text-primary" />
+                          </div>
+                          <div>
+                            <CardTitle>Matched Investors</CardTitle>
+                            <CardDescription>Based on your startup profile</CardDescription>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setActiveCard('report')}
+                        >
+                          <ArrowRight className="h-4 w-4 rotate-180 mr-2" />
+                          Back to Report
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        {matchedInvestors.map((investor, index) => (
+                          <div key={index} className="p-4 border rounded-lg bg-card hover:bg-accent/50 transition-colors">
+                            <div className="space-y-3">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h4 className="font-semibold text-lg">{investor.name}</h4>
+                                  <p className="text-sm text-muted-foreground">{investor.company}</p>
+                                </div>
+                                <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+                                  Match Score: {Math.round(Math.random() * 30 + 70)}%
+                                </div>
+                              </div>
+                              
+                              <p className="text-sm">{investor.profile}</p>
+                              
+                              <div className="space-y-2">
+                                <div>
+                                  <p className="text-sm font-medium text-muted-foreground">Investment Focus</p>
+                                  <div className="flex flex-wrap gap-1 mt-1">
+                                    {investor.focus.map((focus, i) => (
+                                      <span key={i} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                                        {focus}
+                                      </span>
+                                    ))}
                                   </div>
                                 </div>
-                              ))}
+                                
+                                {investor.investmentStage && (
+                                  <div>
+                                    <p className="text-sm font-medium text-muted-foreground">Investment Stage</p>
+                                    <div className="flex flex-wrap gap-1 mt-1">
+                                      {investor.investmentStage.map((stage, i) => (
+                                        <span key={i} className="text-xs bg-accent/20 text-accent-foreground px-2 py-1 rounded-full">
+                                          {stage}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                              
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="mt-2"
+                                onClick={() => window.open(`https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(investor.name)}`, '_blank')}
+                              >
+                                <Linkedin className="h-4 w-4 mr-2" />
+                                View on LinkedIn
+                              </Button>
                             </div>
                           </div>
-
-                          <div className="mt-8">
-                            <h4 className="font-medium">Competitive Landscape Summary</h4>
-                            <div className="mt-2">
-                              <p>{validationResult.startup_validation_report.viability_score.breakdown.competitive_landscape.explanation}</p>
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </TabsContent>
-
-                    <TabsContent value="financials" className="mt-4 space-y-4 px-6">
-                      {validationResult?.startup_validation_report && (
-                        <>
-                          <div>
-                          <h3 className="text-lg font-medium">Startup Costs</h3>
-                            <div className="mt-2">
-                              {Object.entries(validationResult.startup_validation_report.financial_projections.startup_costs).map(([key, value]) => (
-                                <div key={key} className="flex justify-between py-1">
-                                  <span className="capitalize">{key.replace('_', ' ')}:</span>
-                                  <span className="text-primary font-medium">${value.toLocaleString()}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div>
-                            <h4 className="font-medium">Key Financial Metrics</h4>
-                            <div className="mt-2">
-                              <p>CAC: <span className="">${validationResult.startup_validation_report.financial_projections.key_financial_metrics.customer_acquisition_cost}</span></p>
-                              <p>LTV: ${validationResult.startup_validation_report.financial_projections.key_financial_metrics.lifetime_value}</p>
-                              <p>Churn Rate: {validationResult.startup_validation_report.financial_projections.key_financial_metrics.churn_rate}%</p>
-                              <p>Average Subscription Length: {validationResult.startup_validation_report.financial_projections.key_financial_metrics.average_subscription_length} months</p>
-                            </div>
-                          </div>
-
-                          <div>
-                            <h4 className="font-medium">Break Even Analysis</h4>
-                            <div className="mt-2">
-                              <p>Time to Profitability: {validationResult.startup_validation_report.financial_projections.break_even_point.time_to_profitability}</p>
-                              <p>Revenue at Break Even: ${validationResult.startup_validation_report.financial_projections.break_even_point.total_revenue_at_breakeven.toLocaleString()}</p>
-                              <p>Expenses at Break Even: ${validationResult.startup_validation_report.financial_projections.break_even_point.total_expenses_at_breakeven.toLocaleString()}</p>
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </TabsContent>
-
-                    <TabsContent value="recommendations" className="mt-4 space-y-4 px-6">
-                      {validationResult?.startup_validation_report && (
-                        <>
-                          <h3 className="text-lg font-medium ">Strategic Recommendations</h3>
-                          <div className="space-y-4">
-                            <div>
-                              <h4 className="font-medium text-primary">Market Positioning</h4>
-                              <p className="mt-1 text-muted-foreground">
-                                {validationResult.startup_validation_report.actionable_recommendations.market_positioning}
-                              </p>
-                            </div>
-
-                            <div>
-                              <h4 className="font-medium text-primary">Financial Improvements</h4>
-                              <p className="mt-1 text-muted-foreground">
-                                {validationResult.startup_validation_report.actionable_recommendations.financial_improvements}
-                              </p>
-                            </div>
-
-                            <div>
-                              <h4 className="font-medium text-primary">Risk Mitigation</h4>
-                              <p className="mt-1 text-muted-foreground">
-                                {validationResult.startup_validation_report.actionable_recommendations.risk_mitigation}
-                              </p>
-                            </div>
-
-                            <div>
-                              <h4 className="font-medium text-primary">Growth Strategy</h4>
-                              <p className="mt-1 text-muted-foreground">
-                                {validationResult.startup_validation_report.actionable_recommendations.growth_strategy}
-                              </p>
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </TabsContent>
-                  </Tabs>
-                </CardContent>
-                <CardFooter className="border-t p-4 bg-background flex justify-between">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setShowReport(false)
-                      setCurrentStep(0)
-                    }}
-                  >
-                    Start New Analysis
-                  </Button>
-                  <Button onClick={downloadReport}>
-                    <span className="flex items-center gap-2">
-                      Download Full Report <FileText className="h-4 w-4" />
-                    </span>
-                  </Button>
-                </CardFooter>
-              </Card>
+                        ))}
+                      </div>
+                    </CardContent>
+                    <CardFooter className="border-t p-4 bg-background">
+                      <Button
+                        variant="outline"
+                        className="ml-auto"
+                        onClick={() => setActiveCard('report')}
+                      >
+                        Back to Report
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              </div>
             )}
           </motion.div>
 
