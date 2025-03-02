@@ -97,7 +97,12 @@ validate_and_compile_startup_viability_task:
           "industry_size": "<string>",
           "growth_trends": "<string>",
           "target_customers": "<string>",
-          "key_market_shifts": "<string>"
+          "key_market_shifts": "<string>",
+          "customer_pain_points": "<string>",  
+          "market_saturation_level": "<string>", 
+          "distribution_channels": "<string>", 
+          "regulatory_environment": "<string>", 
+          "emerging_opportunities": "<string>"
         }},
         "similar_companies": [
           {{

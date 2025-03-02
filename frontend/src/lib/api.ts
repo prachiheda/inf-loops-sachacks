@@ -65,10 +65,15 @@ export interface ValidationResponse {
       };
     };
     market_analysis: {
-      industry_size: string;
-      growth_trends: string;
-      target_customers: string;
-      key_market_shifts: string;
+        industry_size: string;
+        growth_trends: string;
+        target_customers: string;
+        key_market_shifts: string;
+        customer_pain_points: string; // Common problems customers face that this startup addresses
+        market_saturation_level: string; // How crowded the market is with similar products/services
+        distribution_channels: string; // How the product/service will be delivered to customers
+        regulatory_environment: string; // Any legal or industry regulations affecting the business
+        emerging_opportunities: string; // Potential trends or market gaps that can be leveraged
     };
     similar_companies: Array<{
       company_name: string;

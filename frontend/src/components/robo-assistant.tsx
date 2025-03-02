@@ -12,6 +12,12 @@ import { Label } from "./ui/label"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { validateStartup, ValidationResponse } from '../lib/api'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface FormData {
   businessIdea: string;
@@ -118,18 +124,8 @@ export function RoboAssistant() {
       const result = await validateStartup(formData.businessIdea, fullBackground);
       console.log('Received validation result:', result);
       
-      // More detailed validation
-      if (!result) {
-        throw new Error('No result received from API');
-      }
-      
-      if (typeof result !== 'object') {
-        throw new Error(`Invalid result type: ${typeof result}`);
-      }
-      
-      if (!result.startup_validation_report) {
-        console.error('Invalid API response structure:', result);
-        throw new Error('Response missing startup_validation_report');
+      if (!result?.startup_validation_report) {
+        throw new Error('Invalid response format from API');
       }
       
       setValidationResult(result);
@@ -190,15 +186,28 @@ export function RoboAssistant() {
 
                 {isGeneratingReport ? (
                   <CardContent className="p-6 flex flex-col items-center justify-center min-h-[400px]">
-                    <div className="text-center space-y-4">
-                      <Sparkles className="h-12 w-12 text-primary animate-pulse mx-auto" />
+                    <div className="text-center space-y-6">
+                      <div className="relative w-24 h-24 mx-auto">
+                        <div className="absolute inset-0">
+                          <div className="w-full h-full rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Bot className="h-12 w-12 text-primary" />
+                        </div>
+                      </div>
                       <h3 className="text-xl font-medium">Generating Your Validation Report</h3>
-                      <p className="text-base text-muted-foreground">
-                        Our AI is analyzing your business idea, researching the market, and preparing a comprehensive
-                        validation report...
-                      </p>
-                      <Progress value={65} className="w-full max-w-md mx-auto mt-4" />
-                      <div className="text-sm text-muted-foreground animate-pulse">Analyzing market trends...</div>
+                      <div className="space-y-2 max-w-md mx-auto">
+                        <p className="text-base text-muted-foreground">
+                          Our AI is analyzing your business idea and preparing a comprehensive validation report...
+                        </p>
+                        <div className="flex items-center justify-center gap-2 text-sm text-primary animate-pulse">
+                          <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                          </span>
+                          Analyzing market trends
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 ) : (
@@ -279,7 +288,7 @@ export function RoboAssistant() {
               </Card>
             ) : (
               <Card className="border-2 border-primary/20 shadow-lg overflow-hidden">
-                <CardHeader className="bg-primary/5 border-b">
+                <CardHeader className="bg-primary/5 border-b py-5">
                   <div className="flex items-center space-x-4">
                     <div className="bg-primary/20 p-2 rounded-full">
                       <ClipboardList className="h-6 w-6 text-primary" />
@@ -292,70 +301,148 @@ export function RoboAssistant() {
                 </CardHeader>
                 <CardContent className="p-0">
                   <Tabs defaultValue="overview">
-                    <TabsList className="grid w-full grid-cols-4">
+                    <TabsList className="grid w-full grid-cols-5">
                       <TabsTrigger value="overview">Overview</TabsTrigger>
                       <TabsTrigger value="market">Market Analysis</TabsTrigger>
+                      <TabsTrigger value="competition">Competition</TabsTrigger>
                       <TabsTrigger value="financials">Financials</TabsTrigger>
                       <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="overview" className="mt-4 space-y-4">
+                    <TabsContent value="overview" className="mt-4 space-y-4 px-6">
                       {validationResult?.startup_validation_report && (
                         <>
                           <div>
                             <h3 className="text-lg font-medium">Viability Score</h3>
                             <div className="mt-2">
-                              <div className="text-3xl font-bold">
+                              <div className="text-3xl font-bold text-primary">
                                 {validationResult.startup_validation_report.viability_score?.overall_score || 0}/100
                               </div>
                             </div>
                           </div>
 
-                          <div className="space-y-4">
-                            {Object.entries(validationResult.startup_validation_report.viability_score?.breakdown || {}).map(([key, value]) => (
-                              <div key={key} className="space-y-2">
-                                <h4 className="font-medium capitalize">{key.replace('_', ' ')}</h4>
-                                <div className="flex items-center justify-between">
-                                  <span>{value.score}/100</span>
-                                  <span className="text-muted-foreground">Weight: {value.weight}</span>
-                                </div>
-                                <p className="text-muted-foreground">{value.explanation}</p>
+                          <div className="space-y-6">
+                            <div>
+                              <h4 className="font-medium mb-3">Scoring Weights</h4>
+                              <div className="flex h-4 w-full rounded-full overflow-hidden">
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger className="bg-primary/90 w-[30%]" />
+                                    <TooltipContent>
+                                      <p>Market Demand: 30%</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+
+                                  <Tooltip>
+                                    <TooltipTrigger className="bg-primary/70 w-[25%]" />
+                                    <TooltipContent>
+                                      <p>Competitive Landscape: 25%</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+
+                                  <Tooltip>
+                                    <TooltipTrigger className="bg-primary/50 w-[25%]" />
+                                    <TooltipContent>
+                                      <p>Financial Viability: 25%</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+
+                                  <Tooltip>
+                                    <TooltipTrigger className="bg-primary/30 w-[10%]" />
+                                    <TooltipContent>
+                                      <p>Scalability: 10%</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+
+                                  <Tooltip>
+                                    <TooltipTrigger className="bg-primary/20 w-[10%]" />
+                                    <TooltipContent>
+                                      <p>Risk Factors: 10%</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
                               </div>
-                            ))}
+                              <div className="flex justify-between text-sm mt-2 text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-3 h-3 rounded-full bg-primary/90" />
+                                  <span>Market Demand</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-3 h-3 rounded-full bg-primary/70" />
+                                  <span>Competition</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-3 h-3 rounded-full bg-primary/50" />
+                                  <span>Financial</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-3 h-3 rounded-full bg-primary/30" />
+                                  <span>Scalability</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-3 h-3 rounded-full bg-primary/20" />
+                                  <span>Risk</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="space-y-4">
+                              {Object.entries(validationResult.startup_validation_report.viability_score?.breakdown || {}).map(([key, value]) => (
+                                <div key={key} className="space-y-2">
+                                  <h4 className="font-medium capitalize">{key.replace('_', ' ')}</h4>
+                                  <div className="flex items-center">
+                                    <span className="text-primary font-medium">{value.score}/100</span>
+                                  </div>
+                                  <p className="text-muted-foreground">{value.explanation}</p>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         </>
                       )}
                     </TabsContent>
 
-                    <TabsContent value="market" className="mt-4 space-y-4">
+                    <TabsContent value="market" className="mt-4 space-y-4 px-6">
                       {validationResult?.startup_validation_report && (
                         <>
                           <div className="space-y-4">
                             <div>
-                              <h4 className="font-medium">Industry Analysis</h4>
-                              <ul className="mt-2 space-y-2">
-                                <li><strong>Industry Size:</strong> {validationResult.startup_validation_report.market_analysis.industry_size}</li>
-                                <li><strong>Growth Trends:</strong> {validationResult.startup_validation_report.market_analysis.growth_trends}</li>
-                                <li><strong>Target Customers:</strong> {validationResult.startup_validation_report.market_analysis.target_customers}</li>
-                                <li><strong>Key Market Shifts:</strong> {validationResult.startup_validation_report.market_analysis.key_market_shifts}</li>
-                              </ul>
-                            </div>
-
-                            <div>
-                              <h4 className="font-medium">Similar Companies</h4>
-                              <div className="mt-2 space-y-4">
-                                {validationResult.startup_validation_report.similar_companies.map((company, index) => (
-                                  <div key={index} className="border p-4 rounded-lg">
-                                    <h5 className="font-medium">{company.company_name}</h5>
-                                    <p className="text-sm text-muted-foreground">Similarity Score: {company.similarity_score}%</p>
-                                    <div className="mt-2">
-                                      <p><strong>USP:</strong> {company.key_features.unique_selling_points}</p>
-                                      <p><strong>Challenges:</strong> {company.key_features.challenges}</p>
-                                      <p><strong>Strengths:</strong> {company.key_features.strengths}</p>
-                                    </div>
-                                    <p className="mt-2 text-sm">{company.comparison_to_business_idea}</p>
+                              <h3 className="text-lg font-medium">Market Analysis</h3>
+                              <div className="mt-4 space-y-6">
+                                <div className="grid gap-4">
+                                  <div>
+                                    <h4 className="font-medium text-muted-foreground text-primary">Industry Overview</h4>
+                                    <ul className="mt-2 space-y-2">
+                                      <li><strong className="">Industry Size:</strong> {validationResult.startup_validation_report.market_analysis.industry_size}</li>
+                                      <li><strong>Growth Trends:</strong> {validationResult.startup_validation_report.market_analysis.growth_trends}</li>
+                                      <li><strong>Market Saturation:</strong> {validationResult.startup_validation_report.market_analysis.market_saturation_level}</li>
+                                    </ul>
                                   </div>
-                                ))}
+
+                                  <div>
+                                    <h4 className="font-medium text-muted-foreground text-primary">Customer Analysis</h4>
+                                    <ul className="mt-2 space-y-2">
+                                      <li><strong>Target Customers:</strong> {validationResult.startup_validation_report.market_analysis.target_customers}</li>
+                                      <li><strong>Pain Points:</strong> {validationResult.startup_validation_report.market_analysis.customer_pain_points}</li>
+                                    </ul>
+                                  </div>
+
+                                  <div>
+                                    <h4 className="font-medium text-muted-foreground text-primary">Market Dynamics</h4>
+                                    <ul className="mt-2 space-y-2">
+                                      <li><strong>Key Market Shifts:</strong> {validationResult.startup_validation_report.market_analysis.key_market_shifts}</li>
+                                      <li><strong>Distribution Channels:</strong> {validationResult.startup_validation_report.market_analysis.distribution_channels}</li>
+                                      <li><strong>Regulatory Environment:</strong> {validationResult.startup_validation_report.market_analysis.regulatory_environment}</li>
+                                    </ul>
+                                  </div>
+
+                                  <div>
+                                    <h4 className="font-medium text-muted-foreground text-primary">Future Outlook</h4>
+                                    <ul className="mt-2 space-y-2">
+                                      <li><strong>Emerging Opportunities:</strong> {validationResult.startup_validation_report.market_analysis.emerging_opportunities}</li>
+                                    </ul>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -363,16 +450,67 @@ export function RoboAssistant() {
                       )}
                     </TabsContent>
 
-                    <TabsContent value="financials" className="mt-4 space-y-4">
+                    <TabsContent value="competition" className="mt-4 space-y-4 px-6">
                       {validationResult?.startup_validation_report && (
                         <>
                           <div>
-                            <h4 className="font-medium">Startup Costs</h4>
+                          <h3 className="text-lg font-medium">Similar Companies Analysis</h3>
+                            <div className="mt-4 space-y-6">
+                              {validationResult.startup_validation_report.similar_companies.map((company, index) => (
+                                <div key={index} className="border p-6 rounded-lg bg-card">
+                                  <div className="flex justify-between items-start">
+                                    <h5 className="text-xl font-semibold">{company.company_name}</h5>
+                                    <div className="bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
+                                      {company.similarity_score}% Similar
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="mt-4 grid gap-4">
+                                    <div>
+                                      <h6 className="font-medium text-muted-foreground">Unique Selling Points</h6>
+                                      <p className="mt-1">{company.key_features.unique_selling_points}</p>
+                                    </div>
+                                    
+                                    <div>
+                                      <h6 className="font-medium text-muted-foreground">Strengths</h6>
+                                      <p className="mt-1">{company.key_features.strengths}</p>
+                                    </div>
+                                    
+                                    <div>
+                                      <h6 className="font-medium text-muted-foreground">Challenges</h6>
+                                      <p className="mt-1">{company.key_features.challenges}</p>
+                                    </div>
+                                    
+                                    <div>
+                                      <h6 className="font-medium text-muted-foreground">Comparison to Your Idea</h6>
+                                      <p className="mt-1">{company.comparison_to_business_idea}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="mt-8">
+                            <h4 className="font-medium">Competitive Landscape Summary</h4>
+                            <div className="mt-2">
+                              <p>{validationResult.startup_validation_report.viability_score.breakdown.competitive_landscape.explanation}</p>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </TabsContent>
+
+                    <TabsContent value="financials" className="mt-4 space-y-4 px-6">
+                      {validationResult?.startup_validation_report && (
+                        <>
+                          <div>
+                          <h3 className="text-lg font-medium">Startup Costs</h3>
                             <div className="mt-2">
                               {Object.entries(validationResult.startup_validation_report.financial_projections.startup_costs).map(([key, value]) => (
                                 <div key={key} className="flex justify-between py-1">
                                   <span className="capitalize">{key.replace('_', ' ')}:</span>
-                                  <span>${value.toLocaleString()}</span>
+                                  <span className="text-primary font-medium">${value.toLocaleString()}</span>
                                 </div>
                               ))}
                             </div>
@@ -381,7 +519,7 @@ export function RoboAssistant() {
                           <div>
                             <h4 className="font-medium">Key Financial Metrics</h4>
                             <div className="mt-2">
-                              <p>CAC: ${validationResult.startup_validation_report.financial_projections.key_financial_metrics.customer_acquisition_cost}</p>
+                              <p>CAC: <span className="">${validationResult.startup_validation_report.financial_projections.key_financial_metrics.customer_acquisition_cost}</span></p>
                               <p>LTV: ${validationResult.startup_validation_report.financial_projections.key_financial_metrics.lifetime_value}</p>
                               <p>Churn Rate: {validationResult.startup_validation_report.financial_projections.key_financial_metrics.churn_rate}%</p>
                               <p>Average Subscription Length: {validationResult.startup_validation_report.financial_projections.key_financial_metrics.average_subscription_length} months</p>
@@ -400,34 +538,34 @@ export function RoboAssistant() {
                       )}
                     </TabsContent>
 
-                    <TabsContent value="recommendations" className="mt-4 space-y-4">
+                    <TabsContent value="recommendations" className="mt-4 space-y-4 px-6">
                       {validationResult?.startup_validation_report && (
                         <>
-                          <h3 className="text-lg font-medium">Strategic Recommendations</h3>
+                          <h3 className="text-lg font-medium ">Strategic Recommendations</h3>
                           <div className="space-y-4">
                             <div>
-                              <h4 className="font-medium">Market Positioning</h4>
+                              <h4 className="font-medium text-primary">Market Positioning</h4>
                               <p className="mt-1 text-muted-foreground">
                                 {validationResult.startup_validation_report.actionable_recommendations.market_positioning}
                               </p>
                             </div>
 
                             <div>
-                              <h4 className="font-medium">Financial Improvements</h4>
+                              <h4 className="font-medium text-primary">Financial Improvements</h4>
                               <p className="mt-1 text-muted-foreground">
                                 {validationResult.startup_validation_report.actionable_recommendations.financial_improvements}
                               </p>
                             </div>
 
                             <div>
-                              <h4 className="font-medium">Risk Mitigation</h4>
+                              <h4 className="font-medium text-primary">Risk Mitigation</h4>
                               <p className="mt-1 text-muted-foreground">
                                 {validationResult.startup_validation_report.actionable_recommendations.risk_mitigation}
                               </p>
                             </div>
 
                             <div>
-                              <h4 className="font-medium">Growth Strategy</h4>
+                              <h4 className="font-medium text-primary">Growth Strategy</h4>
                               <p className="mt-1 text-muted-foreground">
                                 {validationResult.startup_validation_report.actionable_recommendations.growth_strategy}
                               </p>
