@@ -4,9 +4,16 @@ from crewai_tools import WebsiteSearchTool
 from crewai_tools import PDFSearchTool
 from crewai_tools import ScrapeWebsiteTool
 
+
 @CrewBase
 class AiPoweredStartupValidatorTeamAutomationCrew():
     """AiPoweredStartupValidatorTeamAutomation crew"""
+
+    def __init__(self):
+        super().__init__()
+        # Initialize tools that will be reused
+        self.scrape_tool = ScrapeWebsiteTool()  # Allow scraping any website it finds
+        self.search_tool = WebsiteSearchTool()  # For searching across websites
 
     @agent
     def business_analyst(self) -> Agent:
@@ -19,7 +26,10 @@ class AiPoweredStartupValidatorTeamAutomationCrew():
     def market_researcher(self) -> Agent:
         return Agent(
             config=self.agents_config['market_researcher'],
-            tools=[ScrapeWebsiteTool(), WebsiteSearchTool()],
+            tools=[
+                self.scrape_tool,
+                self.search_tool
+            ],
         )
 
     @agent
@@ -67,6 +77,7 @@ class AiPoweredStartupValidatorTeamAutomationCrew():
             config=self.tasks_config['validate_and_compile_startup_viability_task'],
             tools=[],
         )
+
 
     @crew
     def crew(self) -> Crew:

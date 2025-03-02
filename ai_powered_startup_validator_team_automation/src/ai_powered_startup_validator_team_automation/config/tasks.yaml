@@ -29,24 +29,134 @@ generate_financial_projections_task:
   context:
   - conduct_market_research_task
 validate_and_compile_startup_viability_task:
-  description: >
-    Combine the outputs from analyze_business_idea_task, conduct_market_research_task, 
-    and generate_financial_projections_task to create a comprehensive Startup Validation Report. This 
-    report should include an viability score out of 100, determined using a weighted system where Market
-    Demand (30%) evaluates market size, growth rate, and consumer interest, Competitive Landscape (25%)
-    assesses the number of competitors and differentiation, Financial Viability (25%) examines revenue 
-    potential and sustainability, Scalability (10%) considers growth potential and automation 
-    feasibility, and Risk Factors (10%) identifies legal, technical, and operational risks. Provide a short explanation for each factor.
-    Additionally, identify the Top 5 Similar Companies, providing each company's name, similarity
-    score, key features (unique selling points, challenges, strengths), and how they compare to 
-    the given business idea. The final report should also include the strengths and weaknesses of the given business idea. Lastly, provide actionable recommendations based 
-    on the aggregated insights from {business_idea} and {entrepreneur_background}, offering strategic
-    guidance to improve feasibility and market positioning.
-  expected_output: "A dictionary containing {'report': comprehensive validation report, 'viability_score': float between 0-100} with full analysis and recommendations"
+  description: |
+    Analyze {business_idea} and {entrepreneur_background} to create a structured validation report.
+    
+    Return the analysis in this exact JSON structure:
+    
+    {{
+      "startup_validation_report": {{
+        "business_idea": "<string>",
+        "entrepreneur_background": "<string>",
+        "viability_score": {{
+          "overall_score": <float 0-100>,
+          "breakdown": {{
+            "market_demand": {{
+              "score": <float 0-100>,
+              "weight": 0.30,
+              "explanation": "<string>",
+              "factors": {{
+                "market_size": "<string>",
+                "growth_rate": "<string>",
+                "consumer_interest": "<string>"
+              }}
+            }},
+            "competitive_landscape": {{
+              "score": <float 0-100>,
+              "weight": 0.25,
+              "explanation": "<string>",
+              "factors": {{
+                "competitor_count": <integer>,
+                "differentiation_level": "<string>",
+                "barriers_to_entry": "<string>"
+              }}
+            }},
+            "financial_viability": {{
+              "score": <float 0-100>,
+              "weight": 0.25,
+              "explanation": "<string>",
+              "factors": {{
+                "revenue_potential": "<string>",
+                "cost_structure": "<string>",
+                "profitability_timeline": "<string>"
+              }}
+            }},
+            "scalability": {{
+              "score": <float 0-100>,
+              "weight": 0.10,
+              "explanation": "<string>",
+              "factors": {{
+                "growth_potential": "<string>",
+                "automation_feasibility": "<string>",
+                "market_expansion": "<string>"
+              }}
+            }},
+            "risk_factors": {{
+              "score": <float 0-100>,
+              "weight": 0.10,
+              "explanation": "<string>",
+              "factors": {{
+                "legal_risks": "<string>",
+                "technical_risks": "<string>",
+                "operational_risks": "<string>"
+              }}
+            }}
+          }}
+        }},
+        "market_analysis": {{
+          "industry_size": "<string>",
+          "growth_trends": "<string>",
+          "target_customers": "<string>",
+          "key_market_shifts": "<string>"
+        }},
+        "similar_companies": [
+          {{
+            "company_name": "<string>",
+            "similarity_score": <integer 0-100>,
+            "key_features": {{
+              "unique_selling_points": "<string>",
+              "challenges": "<string>",
+              "strengths": "<string>"
+            }},
+            "comparison_to_business_idea": "<string>"
+          }}
+        ],
+        "financial_projections": {{
+          "startup_costs": {{
+            "inventory": <float>,
+            "technology": <float>,
+            "marketing": <float>,
+            "legal": <float>,
+            "operations": <float>,
+            "total_startup_cost": <float>
+          }},
+          "revenue_expense_forecast": {{
+            "quarterly_projection": [
+              {{
+                "quarter": "<string>",
+                "projected_revenue": <float>,
+                "projected_expenses": <float>
+              }}
+            ]
+          }},
+          "key_financial_metrics": {{
+            "customer_acquisition_cost": <float>,
+            "lifetime_value": <float>,
+            "churn_rate": <float>,
+            "average_subscription_length": <float>
+          }},
+          "break_even_point": {{
+            "time_to_profitability": "<string>",
+            "total_revenue_at_breakeven": <float>,
+            "total_expenses_at_breakeven": <float>
+          }}
+        }},
+        "actionable_recommendations": {{
+          "market_positioning": "<string>",
+          "financial_improvements": "<string>",
+          "risk_mitigation": "<string>",
+          "growth_strategy": "<string>"
+        }}
+      }}
+    }}
+
+    Base all analyses on the outputs from analyze_business_idea_task, conduct_market_research_task, and generate_financial_projections_task.
+    Ensure all numerical values are properly calculated and all text fields provide clear, concise insights.
+
+  expected_output: "A JSON object following the exact structure specified above, with all fields populated with relevant data"
   async_execution: false
   agent: ai_validator
   context:
     - analyze_business_idea_task
     - conduct_market_research_task
     - generate_financial_projections_task
-
