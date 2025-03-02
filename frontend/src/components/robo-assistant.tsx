@@ -2,7 +2,18 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowRight, Bot, CheckCircle, ClipboardList, FileText, Sparkles, Linkedin } from "lucide-react"
+import { 
+  ArrowRight, 
+  Bot, 
+  CheckCircle, 
+  ClipboardList, 
+  FileText, 
+  Sparkles, 
+  Linkedin,
+  Clock as ClockIcon,
+  TrendingUp as TrendingUpIcon,
+  TrendingDown as TrendingDownIcon
+} from "lucide-react"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
@@ -889,39 +900,90 @@ export function RoboAssistant() {
                           )}
                         </TabsContent>
 
-                        <TabsContent value="financials" className="mt-4 space-y-4 px-6">
+                        <TabsContent value="financials" className="mt-4 space-y-6 px-6">
                           {validationResult?.startup_validation_report && (
                             <>
-                              <div>
-                              <h3 className="text-lg font-medium">Startup Costs</h3>
-                                <div className="mt-2">
-                                  {Object.entries(validationResult.startup_validation_report.financial_projections.startup_costs).map(([key, value]) => (
-                                    <div key={key} className="flex justify-between py-1">
-                                      <span className="capitalize">{key.replace('_', ' ')}:</span>
-                                      <span className="text-primary font-medium">${value.toLocaleString()}</span>
+                              <div className="grid gap-6 md:grid-cols-2">
+                                {/* Startup Costs Card */}
+                                <Card className="p-4">
+                                  <h3 className="text-lg font-medium mb-4">Initial Investment Breakdown</h3>
+                                  <div className="space-y-3">
+                                    {Object.entries(validationResult.startup_validation_report.financial_projections.startup_costs).map(([key, value]) => (
+                                      <div key={key} className="space-y-1">
+                                        <div className="flex justify-between text-sm">
+                                          <span className="capitalize">{key.replace('_', ' ')}</span>
+                                          <span className="font-medium">${value.toLocaleString()}</span>
+                                        </div>
+                                        <Progress 
+                                          value={
+                                            (value / validationResult.startup_validation_report.financial_projections.startup_costs.total_startup_cost) * 100
+                                          } 
+                                          className="h-2"
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
+                                </Card>
+
+                                {/* Key Metrics Card */}
+                                <Card className="p-4">
+                                  <h3 className="text-lg font-medium mb-4">Key Performance Metrics</h3>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2 p-3 bg-primary/5 rounded-lg">
+                                      <p className="text-sm text-muted-foreground">Customer Acquisition Cost</p>
+                                      <p className="text-2xl font-bold text-primary">
+                                        ${validationResult.startup_validation_report.financial_projections.key_financial_metrics.customer_acquisition_cost}
+                                      </p>
                                     </div>
-                                  ))}
-                                </div>
+                                    <div className="space-y-2 p-3 bg-primary/5 rounded-lg">
+                                      <p className="text-sm text-muted-foreground">Customer Lifetime Value</p>
+                                      <p className="text-2xl font-bold text-primary">
+                                        ${validationResult.startup_validation_report.financial_projections.key_financial_metrics.lifetime_value}
+                                      </p>
+                                    </div>
+                                    <div className="space-y-2 p-3 bg-primary/5 rounded-lg">
+                                      <p className="text-sm text-muted-foreground">Churn Rate</p>
+                                      <p className="text-2xl font-bold text-primary">
+                                        {validationResult.startup_validation_report.financial_projections.key_financial_metrics.churn_rate}%
+                                      </p>
+                                    </div>
+                                    <div className="space-y-2 p-3 bg-primary/5 rounded-lg">
+                                      <p className="text-sm text-muted-foreground">Avg. Subscription Length</p>
+                                      <p className="text-2xl font-bold text-primary">
+                                        {validationResult.startup_validation_report.financial_projections.key_financial_metrics.average_subscription_length}mo
+                                      </p>
+                                    </div>
+                                  </div>
+                                </Card>
                               </div>
 
-                              <div>
-                                <h4 className="font-medium">Key Financial Metrics</h4>
-                                <div className="mt-2">
-                                  <p>CAC: <span className="">${validationResult.startup_validation_report.financial_projections.key_financial_metrics.customer_acquisition_cost}</span></p>
-                                  <p>LTV: ${validationResult.startup_validation_report.financial_projections.key_financial_metrics.lifetime_value}</p>
-                                  <p>Churn Rate: {validationResult.startup_validation_report.financial_projections.key_financial_metrics.churn_rate}%</p>
-                                  <p>Average Subscription Length: {validationResult.startup_validation_report.financial_projections.key_financial_metrics.average_subscription_length} months</p>
+                              {/* Break Even Analysis Card */}
+                              <Card className="p-4">
+                                <h3 className="text-lg font-medium mb-4">Break Even Analysis</h3>
+                                <div className="grid md:grid-cols-3 gap-4">
+                                  <div className="space-y-2">
+                                    <h4 className="text-sm font-medium text-muted-foreground">Time to Profitability</h4>
+                                    <div className="flex items-center gap-2 text-lg font-semibold">
+                                      <ClockIcon className="h-5 w-5 text-primary" />
+                                      {validationResult.startup_validation_report.financial_projections.break_even_point.time_to_profitability}
+                                    </div>
+                                  </div>
+                                  <div className="space-y-2">
+                                    <h4 className="text-sm font-medium text-muted-foreground">Revenue at Break Even</h4>
+                                    <div className="flex items-center gap-2 text-lg font-semibold text-green-600">
+                                      <TrendingUpIcon className="h-5 w-5" />
+                                      ${validationResult.startup_validation_report.financial_projections.break_even_point.total_revenue_at_breakeven.toLocaleString()}
+                                    </div>
+                                  </div>
+                                  <div className="space-y-2">
+                                    <h4 className="text-sm font-medium text-muted-foreground">Expenses at Break Even</h4>
+                                    <div className="flex items-center gap-2 text-lg font-semibold text-red-600">
+                                      <TrendingDownIcon className="h-5 w-5" />
+                                      ${validationResult.startup_validation_report.financial_projections.break_even_point.total_expenses_at_breakeven.toLocaleString()}
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-
-                              <div>
-                                <h4 className="font-medium">Break Even Analysis</h4>
-                                <div className="mt-2">
-                                  <p>Time to Profitability: {validationResult.startup_validation_report.financial_projections.break_even_point.time_to_profitability}</p>
-                                  <p>Revenue at Break Even: ${validationResult.startup_validation_report.financial_projections.break_even_point.total_revenue_at_breakeven.toLocaleString()}</p>
-                                  <p>Expenses at Break Even: ${validationResult.startup_validation_report.financial_projections.break_even_point.total_expenses_at_breakeven.toLocaleString()}</p>
-                                </div>
-                              </div>
+                              </Card>
                             </>
                           )}
                         </TabsContent>
