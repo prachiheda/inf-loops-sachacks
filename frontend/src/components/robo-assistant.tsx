@@ -18,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import jsPDF from 'jspdf';
 
 interface FormData {
   businessIdea: string;
@@ -138,6 +139,96 @@ export function RoboAssistant() {
       console.log('Report generation process completed');
     }
   }
+
+  const downloadReport = () => {
+    if (!validationResult?.startup_validation_report) return;
+    
+    const doc = new jsPDF();
+    const report = validationResult.startup_validation_report;
+    let y = 20;
+    const lineHeight = 7;
+    const margin = 20;
+    const pageWidth = doc.internal.pageSize.width;
+    const pageHeight = doc.internal.pageSize.height;
+    const maxWidth = pageWidth - 2 * margin;
+    
+    const addText = (text: string, fontSize = 10, isBold = false) => {
+      doc.setFontSize(fontSize);
+      const splitText = doc.splitTextToSize(text, maxWidth);
+      
+      // Check if we need a new page
+      if (y + (lineHeight * splitText.length) > pageHeight - margin) {
+        doc.addPage();
+        y = margin;
+      }
+      
+      doc.text(splitText, margin, y);
+      y += lineHeight * splitText.length;
+    };
+
+    const addHeader = (text: string) => {
+      // Check if we need a new page for header
+      if (y + 20 > pageHeight - margin) {
+        doc.addPage();
+        y = margin;
+      }
+      y += 5;
+      addText(text, 14, true);
+      y += 3;
+    };
+
+    addText('Startup Validation Report', 20, true);
+    y += 10;
+
+    addHeader('Overall Viability Score');
+    addText(`Score: ${report.viability_score.overall_score}/100`, 12);
+    
+    addHeader('Market Analysis');
+    addText(`Industry Size: ${report.market_analysis.industry_size}`);
+    addText(`Growth Trends: ${report.market_analysis.growth_trends}`);
+    addText(`Target Customers: ${report.market_analysis.target_customers}`);
+    addText(`Market Saturation: ${report.market_analysis.market_saturation_level}`);
+    addText(`Pain Points: ${report.market_analysis.customer_pain_points}`);
+    addText(`Distribution Channels: ${report.market_analysis.distribution_channels}`);
+    addText(`Regulatory Environment: ${report.market_analysis.regulatory_environment}`);
+    
+    addHeader('Competition Analysis');
+    report.similar_companies.forEach((company) => {
+      addText(`${company.company_name} (${company.similarity_score}% Similar)`);
+      addText(`USP: ${company.key_features.unique_selling_points}`);
+      addText(`Strengths: ${company.key_features.strengths}`);
+      addText(`Challenges: ${company.key_features.challenges}`);
+      addText(`Comparison: ${company.comparison_to_business_idea}`);
+      y += 3;
+    });
+
+    addHeader('Financial Analysis');
+    addText('Startup Costs:');
+    Object.entries(report.financial_projections.startup_costs).forEach(([key, value]) => {
+      addText(`${key.replace('_', ' ')}: $${value.toLocaleString()}`);
+    });
+    
+    y += 5;
+    addText('Key Metrics:');
+    addText(`CAC: $${report.financial_projections.key_financial_metrics.customer_acquisition_cost}`);
+    addText(`LTV: $${report.financial_projections.key_financial_metrics.lifetime_value}`);
+    addText(`Churn Rate: ${report.financial_projections.key_financial_metrics.churn_rate}%`);
+    addText(`Average Subscription Length: ${report.financial_projections.key_financial_metrics.average_subscription_length} months`);
+    
+    y += 5;
+    addText('Break Even Analysis:');
+    addText(`Time to Profitability: ${report.financial_projections.break_even_point.time_to_profitability}`);
+    addText(`Revenue at Break Even: $${report.financial_projections.break_even_point.total_revenue_at_breakeven.toLocaleString()}`);
+    addText(`Expenses at Break Even: $${report.financial_projections.break_even_point.total_expenses_at_breakeven.toLocaleString()}`);
+
+    addHeader('Strategic Recommendations');
+    addText(`Market Positioning: ${report.actionable_recommendations.market_positioning}`);
+    addText(`Financial Improvements: ${report.actionable_recommendations.financial_improvements}`);
+    addText(`Risk Mitigation: ${report.actionable_recommendations.risk_mitigation}`);
+    addText(`Growth Strategy: ${report.actionable_recommendations.growth_strategy}`);
+
+    doc.save('startup-validation-report.pdf');
+  };
 
   return (
     <section className="w-full py-12 md:py-16 lg:py-20 relative">
@@ -586,7 +677,7 @@ export function RoboAssistant() {
                   >
                     Start New Analysis
                   </Button>
-                  <Button>
+                  <Button onClick={downloadReport}>
                     <span className="flex items-center gap-2">
                       Download Full Report <FileText className="h-4 w-4" />
                     </span>
