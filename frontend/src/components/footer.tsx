@@ -9,7 +9,7 @@ export function Footer() {
             <div className="rounded-full bg-primary/10 p-1">
               <Brain className="h-6 w-6 text-primary" />
             </div>
-            <span className="text-xl font-bold">ValidateAI</span>
+            <span className="text-xl font-bold">InnovaAI</span>
           </div>
           <div className="flex flex-col items-center gap-4 md:flex-row md:gap-6">
             <a href="#" className="text-base text-muted-foreground hover:underline">
@@ -23,7 +23,7 @@ export function Footer() {
             </a>
           </div>
           <div className="text-center text-base text-muted-foreground md:text-right">
-            &copy; {new Date().getFullYear()} ValidateAI. All rights reserved.
+            &copy; {new Date().getFullYear()} InnovaAI. All rights reserved.
           </div>
         </div>
       </div>

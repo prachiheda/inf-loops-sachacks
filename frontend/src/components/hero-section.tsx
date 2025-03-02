@@ -14,7 +14,7 @@ export function HeroSection() {
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 xl:gap-20">
           <div className="flex flex-col justify-center space-y-6 py-8 lg:py-12">
             <div className="inline-block rounded-lg bg-muted px-4 py-1.5 text-base w-fit mb-6">
-              <span className="font-medium">Introducing ValidateAI</span>
+              <span className="font-medium">Introducing InnovaAI</span>
             </div>
 
             <motion.h1
@@ -23,7 +23,7 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              Validate Your Startup Idea with <span className="text-primary">AI-Powered Reports</span>
+              Validate Your Startup Idea with <span className="text-primary">AI-Powered Agents</span>
             </motion.h1>
 
             <motion.p
@@ -32,7 +32,7 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Stop guessing. Start validating. Our AI agent analyzes your business idea and generates comprehensive
+              Stop guessing. Start validating. Our AI agents analyzes your business idea and generates comprehensive
               reports with market insights, competitor analysis, and financial projections.
             </motion.p>
 
@@ -68,6 +68,7 @@ export function HeroSection() {
             </div>
           </div>
 
+
           <motion.div
             className="flex items-center justify-center lg:h-full"
             initial={{ opacity: 0, scale: 0.9 }}
@@ -82,7 +83,7 @@ export function HeroSection() {
                   <div className="w-3.5 h-3.5 rounded-full bg-yellow-500"></div>
                   <div className="w-3.5 h-3.5 rounded-full bg-green-500"></div>
                 </div>
-                <div className="mx-auto text-base font-medium">ValidateAI Report Generator</div>
+                <div className="mx-auto text-base font-medium">InnovaAI Report Generator</div>
               </div>
               <div className="pt-20 p-8 h-full flex flex-col">
                 <div className="flex-1 space-y-6">
