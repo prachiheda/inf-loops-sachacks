@@ -16,12 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 
 interface FormData {
   businessIdea: string;
-  industry: string;
-  targetAudience: string;
   experience: string;
-  fundingNeeds: string;
-  competitors: string;
-  uniqueValue: string;
+  entrepreneurshipExperience: string;
 }
 
 interface FieldOption {
@@ -43,12 +39,8 @@ export function RoboAssistant() {
   const [showReport, setShowReport] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     businessIdea: "",
-    industry: "",
-    targetAudience: "",
     experience: "beginner",
-    fundingNeeds: "",
-    competitors: "",
-    uniqueValue: "",
+    entrepreneurshipExperience: "",
   })
 
   const steps: { title: string; description: string; fields: Field[] }[] = [
@@ -58,27 +50,9 @@ export function RoboAssistant() {
       fields: [
         {
           id: "businessIdea",
-          label: "Describe your business idea in detail",
+          label: "Describe your business idea in 1-2 sentences",
           type: "textarea",
           placeholder: "e.g., A subscription box for eco-friendly household products...",
-        },
-        {
-          id: "industry",
-          label: "What industry does your business operate in?",
-          type: "input",
-          placeholder: "e.g., E-commerce, SaaS, Health & Wellness...",
-        },
-      ],
-    },
-    {
-      title: "Target Market",
-      description: "Define your ideal customers",
-      fields: [
-        {
-          id: "targetAudience",
-          label: "Describe your target audience",
-          type: "textarea",
-          placeholder: "e.g., Environmentally conscious homeowners aged 25-45...",
         },
       ],
     },
@@ -97,28 +71,10 @@ export function RoboAssistant() {
           ],
         },
         {
-          id: "fundingNeeds",
-          label: "What are your funding needs and resources?",
+          id: "entrepreneurshipExperience",
+          label: "Tell us more about your background - tech, non-tech, etc.",
           type: "textarea",
-          placeholder: "e.g., Seeking $50k in seed funding, have $10k personal savings to invest...",
-        },
-      ],
-    },
-    {
-      title: "Competition",
-      description: "Tell us about your competitors",
-      fields: [
-        {
-          id: "competitors",
-          label: "Who are your main competitors?",
-          type: "textarea",
-          placeholder: "e.g., Company X, Company Y, and similar services like...",
-        },
-        {
-          id: "uniqueValue",
-          label: "What makes your business unique compared to competitors?",
-          type: "textarea",
-          placeholder: "e.g., Our proprietary technology, unique business model...",
+          placeholder: "e.g., Ex Startup Founder, Ex SWE at Google, MBA at Harvard, etc.",
         },
       ],
     },
@@ -214,14 +170,14 @@ export function RoboAssistant() {
                   <CardContent className="p-6">
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <h3 className="text-xl font-medium">{steps[currentStep].title}</h3>
-                        <p className="text-base text-muted-foreground">{steps[currentStep].description}</p>
+                        <h3 className="text-2xl font-bold">{steps[currentStep].title}</h3>
+                        <p className="text-lg text-muted-foreground">{steps[currentStep].description}</p>
                       </div>
 
                       <div className="space-y-5">
                         {steps[currentStep].fields.map((field) => (
-                          <div key={field.id} className="space-y-2">
-                            <Label htmlFor={field.id} className="text-base">{field.label}</Label>
+                          <div key={field.id} className="space-y-3">
+                            <Label htmlFor={field.id} className="text-lg font-bold block">{field.label}</Label>
 
                             {field.type === "textarea" && (
                               <Textarea
@@ -230,7 +186,7 @@ export function RoboAssistant() {
                                 value={formData[field.id]}
                                 onChange={(e) => handleInputChange(field.id, e.target.value)}
                                 rows={4}
-                                className="text-base"
+                                className="text-lg"
                               />
                             )}
 
@@ -240,7 +196,7 @@ export function RoboAssistant() {
                                 placeholder={field.placeholder}
                                 value={formData[field.id]}
                                 onChange={(e) => handleInputChange(field.id, e.target.value)}
-                                className="text-base h-10"
+                                className="text-lg h-12"
                               />
                             )}
 
@@ -248,12 +204,16 @@ export function RoboAssistant() {
                               <RadioGroup
                                 value={formData[field.id]}
                                 onValueChange={(value) => handleInputChange(field.id, value)}
-                                className="space-y-2"
+                                className="space-y-0"
                               >
                                 {field.options.map((option) => (
-                                  <div key={option.value} className="flex items-center space-x-2">
-                                    <RadioGroupItem value={option.value} id={`${field.id}-${option.value}`} className="h-4 w-4" />
-                                    <Label htmlFor={`${field.id}-${option.value}`} className="text-base">{option.label}</Label>
+                                  <div key={option.value} className="flex items-center space-x-4">
+                                    <RadioGroupItem 
+                                      value={option.value} 
+                                      id={`${field.id}-${option.value}`} 
+                                      className="h-6 w-6 border-2 border-primary/50 data-[state=checked]:border-primary data-[state=checked]:border-4"
+                                    />
+                                    <Label htmlFor={`${field.id}-${option.value}`} className="text-lg">{option.label}</Label>
                                   </div>
                                 ))}
                               </RadioGroup>
