@@ -156,7 +156,8 @@ validate_and_compile_startup_viability_task:
     }}
 
     Base all analyses on the outputs from analyze_business_idea_task, conduct_market_research_task, and generate_financial_projections_task.
-    Ensure all numerical values are properly calculated and all text fields provide clear, concise insights.
+    Ensure all numerical values are properly calculated and all text fields provide clear, concise insights. In the actionable recommendations,
+     provide a specific and unique list of recommendations for the entrepreneur to improve their business idea. Each should be around two sentences long.
 
   expected_output: "A JSON object following the exact structure specified above, with all fields populated with relevant data"
   async_execution: false

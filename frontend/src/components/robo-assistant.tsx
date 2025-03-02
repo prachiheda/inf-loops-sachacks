@@ -217,6 +217,13 @@ export function RoboAssistant() {
   const [matchedInvestors, setMatchedInvestors] = useState<Investor[]>([]);
   const [showInvestorsTab, setShowInvestorsTab] = useState(false);
   const [activeCard, setActiveCard] = useState<'report' | 'investors'>('report');
+  const [useDemoData, setUseDemoData] = useState(false);
+
+  const demoData = {
+    businessIdea: "A subscription-based meal kit service that provides AI-personalized recipes and pre-portioned ingredients tailored to individual dietary needs, food allergies, and fitness goals.",
+    experience: "beginner",
+    entrepreneurshipExperience: "As a computer science student, I've explored machine learning and data-driven solutions through various projects. My interest in AI and its real-world impact led me to apply it to nutrition, creating a smarter way to personalize meal planning and reduce food waste."
+  };
 
   const steps: { title: string; description: string; fields: Field[] }[] = [
     {
@@ -460,7 +467,7 @@ export function RoboAssistant() {
             <div className="inline-block rounded-lg bg-primary/10 px-4 py-1.5 text-base text-primary">
               AI Validation Agent
             </div>
-            <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl">Your AI Startup Validation Assistant</h2>
+            <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl">Your AI Startup Validation Agents</h2>
             <p className="max-w-[900px] text-lg text-muted-foreground md:text-xl/relaxed lg:text-2xl/relaxed">
               Answer a few questions about your business idea and get a comprehensive validation report with market
               insights, competitor analysis, and financial projections.
@@ -468,6 +475,51 @@ export function RoboAssistant() {
           </div>
         </div>
         <div className="mx-auto max-w-6xl mt-16">
+          <div className="flex justify-center mb-8">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => {
+                setUseDemoData(!useDemoData);
+                if (!useDemoData) {
+                  setFormData(demoData);
+                  setCurrentStep(0);
+                  setShowReport(false);
+                  setValidationResult(null);
+                  setError(null);
+                  setActiveCard('report');
+                } else {
+                  setFormData({
+                    businessIdea: "",
+                    experience: "beginner",
+                    entrepreneurshipExperience: ""
+                  });
+                  setCurrentStep(0);
+                  setShowReport(false);
+                  setValidationResult(null);
+                  setError(null);
+                  setActiveCard('report');
+                }
+              }}
+              className={`transition-all duration-200 ${
+                useDemoData 
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                  : "hover:bg-primary/10"
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                {useDemoData ? (
+                  <>
+                    Start Fresh <CheckCircle className="h-5 w-5" />
+                  </>
+                ) : (
+                  <>
+                    Try an Example <Sparkles className="h-5 w-5" />
+                  </>
+                )}
+              </span>
+            </Button>
+          </div>
           <motion.div
             className="mt-12 max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
@@ -484,7 +536,7 @@ export function RoboAssistant() {
                         <Bot className="h-7 w-7 text-primary" />
                       </div>
                       <div>
-                        <CardTitle className="text-xl">ValidateAI Agent</CardTitle>
+                        <CardTitle className="text-xl">InnovaAI's Agents</CardTitle>
                         <CardDescription className="text-base">Analyzing your startup potential</CardDescription>
                       </div>
                     </div>
