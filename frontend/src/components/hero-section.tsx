@@ -23,7 +23,7 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              Validate Your Startup Idea with <span className="text-primary">AI-Powered Agents</span>
+              Validate Your Startup Idea with <span className="text-primary">InnovaAI's Agents</span>
             </motion.h1>
 
             <motion.p
@@ -32,7 +32,7 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Stop guessing. Start validating. Our AI agents analyzes your business idea and generates comprehensive
+              Stop guessing. Start validating. InnovaAI's advanced agents analyze your business idea and generates comprehensive
               reports with market insights, competitor analysis, and financial projections.
             </motion.p>
 
